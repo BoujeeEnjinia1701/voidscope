@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use or build on this design, please cite it as below."
+type: software
+title: "VoidScope"
+abstract: "Searches rubble voids with a camera probe that also delivers water and air to a trapped survivor."
+authors:
+  - given-names: Amish
+    family-names: Chadha
+    affiliation: Design Molecule
+    orcid: "https://orcid.org/0009-0000-8079-7141"
+repository-code: "https://github.com/BoujeeEnjinia1701/voidscope"
+url: "https://designmolecule.com"
+license: CERN-OHL-S-2.0
+keywords:
+  - open-hardware
+  - search-and-rescue
+  - collapsed-structures
+  - usar
+  - camera-probe
+  - humanitarian

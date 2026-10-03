@@ -1,0 +1,82 @@
+tag,quantity,value,unit
+A1,"Largest diameter anywhere on the probe (head 48, grip 47, buttons)",48.0,mm
+A2,Radial clearance in a 51 mm core hole at the head,1.50,mm
+A3,"Assembled probe length, tail cap to tip",4398,mm
+A4,"Working length, tip to the front of the grip",4063,mm
+A5,"Head length, collar back face to tip",173,mm
+A6,Rigid rod: smallest bend radius it can follow,none (straight only),
+B1,Rod tube second moment of area,28418,mm4
+B2,Rod tube section modulus,1492,mm3
+B3,"Rod line mass (tube, couplers, lines, water)",0.61,kg/m
+B4,"Head mass (collar, nose, camera, speaker, bite valve)",0.67,kg
+B5,"Probe mass, assembled, lines filled",3.66,kg
+B6a,Tip droop with 1 m unsupported beyond the hole,1.50,mm
+B6b,Tip droop with 2 m unsupported beyond the hole,15.1,mm
+B71,Hand force at the grip with 1 m in the void and the tip unsupported (+ pushes down),-7.81,N
+B72,Hand force at the grip with 2 m in the void and the tip unsupported (+ pushes down),3.58,N
+B73,Hand force at the grip with 3 m in the void and the tip unsupported (+ pushes down),33.8,N
+B8,"Bending moment at the hole lip, 3 m in the void, tip unsupported",46.8,N m
+B9,Bending stress in the plain tube at that moment,31.4,MPa
+B10,Stress at a button hole (stress concentration 3),94.2,MPa
+B11,Safety factor on yield at a button hole,2.55,
+B12,"Euler buckling load of the whole rod, pinned at both ends",1001,N
+B13,Buckling factor at a 200 N two-handed push,5.00,
+B14,Bearing stress at a button hole at a 300 N pull to free a stuck probe,25.5,MPa
+B15,Shear-out stress behind the button hole at 300 N,3.40,MPa
+B16,Shear stress in the two coupler pins at 300 N (epoxy ignored),11.9,MPa
+C1,Width seen at 1 m with a 90 degree horizontal view,2000,mm
+C2,Pixels across the height of a 20 mm letter at 1 m (1080p),19.2,px
+C3,Pixels needed to read a letter (assumed),10,
+C4,Illuminance on axis at 1 m from the camera LEDs (60 lm in a 120 degree beam),19.1,lx
+C5,Ratio to the camera's 0.01 lx minimum illumination,1910,
+C6,Light left after 2 m of dusty air at an assumed extinction of 0.5 per m,7.03,lx
+D1-0.5-5,"Drip ceiling at 0.5 m water height above the tip, 5 C, clamp fully open",0.48,mL/min
+D1-0.5-20,"Drip ceiling at 0.5 m water height above the tip, 20 C, clamp fully open",0.74,mL/min
+D1-0.5-40,"Drip ceiling at 0.5 m water height above the tip, 40 C, clamp fully open",1.13,mL/min
+D1-1-5,"Drip ceiling at 1 m water height above the tip, 5 C, clamp fully open",0.97,mL/min
+D1-1-20,"Drip ceiling at 1 m water height above the tip, 20 C, clamp fully open",1.47,mL/min
+D1-1-40,"Drip ceiling at 1 m water height above the tip, 40 C, clamp fully open",2.26,mL/min
+D1-2-5,"Drip ceiling at 2 m water height above the tip, 5 C, clamp fully open",1.94,mL/min
+D1-2-20,"Drip ceiling at 2 m water height above the tip, 20 C, clamp fully open",2.94,mL/min
+D1-2-40,"Drip ceiling at 2 m water height above the tip, 40 C, clamp fully open",4.51,mL/min
+D2,Highest possible flow: 2 m height (1 m allowed plus 1 m error) at 40 C,4.51,mL/min
+D3,"Same, at the 1 m height the procedure allows, 20 C",1.47,mL/min
+D4,"Water per hour at 1 m, 20 C, clamp fully open",88.2,mL/h
+D5,"Water in the line when primed (4 x 2.5 mm tube, 8 m)",39.3,mL
+D6,Flow at 1 m without the capillary (why it is fitted),70.4,mL/min
+D7,Water pressure at the bite valve at 2 m height (no flow),19.6,kPa
+D8,"Water set change: pull old tube 1 min, push new tube 2 min, prime 1 min",4.00,min
+E1-filter,Pressure drop at 20 L/min: filter,50.0,Pa
+E1-meter,Pressure drop at 20 L/min: meter,200,Pa
+E1-hose,Pressure drop at 20 L/min: hose,54.5,Pa
+E1-barbs,Pressure drop at 20 L/min: barbs,54.1,Pa
+E1-rod,Pressure drop at 20 L/min: rod,10.2,Pa
+E1-outlets,Pressure drop at 20 L/min: outlets,7.21,Pa
+E1-total,Pressure drop at 20 L/min: total,376,Pa
+E2,Air speed leaving the six 5 mm outlets at 20 L/min,2.83,m/s
+E3,Air flow at full blower speed into an open void,44.3,L/min
+E4,Blower speed setting for 20 L/min,65.0,%
+E5,Highest pressure at the tip with every outlet blocked (blower shut-off),0.90,kPa
+E6,"Leak past one coupler at 50 Pa in the rod (0.11 mm gap, 30 mm long)",0.0772,L/min
+E7,Blower electrical power at the 20 L/min setting,1.40,W
+F1,"Video and light load at the battery (camera 3 W, monitor 7 W, converter 90 %)",11.1,W
+F2,With air at 20 L/min and push-to-talk on standby,12.9,W
+F3,"Pack energy, 12.8 V 6 Ah LiFePO4",76.8,Wh
+F4-20,Video and light run time on one pack at 20 C,6.22,h
+F5-20,Run time with air and audio on one pack at 20 C,5.35,h
+F4--10,Video and light run time on one pack at -10 C,4.35,h
+F5--10,Run time with air and audio on one pack at -10 C,3.75,h
+F6,Run time with air and audio on both packs at -10 C (one swap),7.50,h
+F7,Peak current at full blower and full LEDs,1.43,A
+G1,Energy of a 1 m drop of the head and section 1 together,12.9,J
+G2,"Minimum wall in the nose (camera bore to outside, and to the pocket)",2.85,mm
+H1,"open both cases, lift out the rod bundle and head",0.40,min
+H2,join the head and four sections (snap buttons),0.70,min
+H3,"plug the camera cable, fit the air hose, hang the water bottle",0.60,min
+H4,"switch on, check the picture and voice",0.40,min
+H5,"Estimated time to start searching, two people",2.10,min
+I1,"Surface unit mass with one pack fitted (case 2.6 kg, pack 0.85 kg, monitor 0.6 kg, others estimated)",6.16,kg
+I2,Estimated cost of the constructable design from bom/bom.csv,1578,USD
+I3,Value-engineering target (budget_usd),2000,USD
+I4,Under (+) or over (-) the target,422,USD
+I5,Cost without outside lathe time (builder has a lathe),1398,USD
