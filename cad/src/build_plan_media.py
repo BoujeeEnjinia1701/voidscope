@@ -4,7 +4,8 @@ Run from the repo root:  python cad/src/build_plan_media.py [overview|sheets|joi
 With no argument it draws everything. Every picture is drawn from cad/src/model.py
 (build_components), so the pictures and the model never disagree:
     docs/05-build-plan/overview.png        every component pulled apart, numbered in build order
-    cad/drawings/VDS-DWG-101 to 109        making sketches for the made and drilled components
+    cad/drawings/VDS-DWG-101 to 114        making sketches for the made and drilled components (110 to 114:
+                                           the steerable camera tip and its control, VDS-DDR-003)
     docs/05-build-plan/joint-NN.png        close-ups of the joints that need explaining
     docs/05-build-plan/step-NN.png         one picture per assembly step
     docs/05-build-plan/wiring.png          block-level wiring and the air and water lines (matplotlib)
@@ -33,7 +34,13 @@ COL = {"rod": "#D1D5DB", "coupler": "#0F766E", "button": "#B91C1C", "pins": "#11
        "ring": "#111827", "speaker": "#374151", "cover": "#A8A29E", "case": "#F59E0B", "lid": "#FBBF24",
        "eplate": "#A8A29E", "spacer": "#111827", "battery": "#C2410C", "blower": "#334155", "modules": "#16A34A",
        "flowmeter": "#0EA5E9", "fmb": "#64748B", "fittings": "#111827", "filter": "#E5E7EB", "monitor": "#1E293B",
-       "dbracket": "#64748B", "stand": "#374151", "bottle": "#93C5FD"}
+       "dbracket": "#64748B", "stand": "#374151", "bottle": "#93C5FD", "base": "#9CA3AF", "link": "#374151",
+       "tiph": "#6B7280", "tpin": "#111827", "sheath": "#1F2937", "swire": "#7C3AED", "housing": "#7C3AED",
+       "ctrl": "#0F766E", "drum": "#B45309", "lever": "#B91C1C", "knob": "#111827"}
+CAMZ = P["z_axis"] + P["nose"][3]
+LINKS = [f"link{i}" for i in range(1, P["n_joint"])]
+DWG_P2 = [("P1", "Making sketch for the prototype build plan", DATE, "AC"),
+          ("P2", "VDS-DDR-003: steerable camera tip", DATE, "AC")]
 
 
 def _b():
@@ -99,12 +106,19 @@ def overview():
     items.append(part("Collar", mv(S("collar", "spg_grommet"), 260), COL["collar"]))
     items.append(part("Nose", mv(S("nose", "nose_screws"), 420), COL["nose"]))
     items.append(part("Tail cap, air barb, grommets", mv(S("tailcap", "barb", "tc_grommets", "tc_pins"), s1b - sec_x(4)[0] - 140, 270), COL["tailcap"]))
-    items.append(part("Camera head and spacer ring", mv(S("camera", "cam_ring"), 560, 0, 0), COL["camera"]))
+    items.append(part("Base link and grub screws", mv(S("base", "base_screws"), 470), COL["base"]))
+    items.append(part("Bending links (4) and hinge pins", fuse([mv(S(k), 520 + 14 * i) for i, k in enumerate(LINKS)] + [mv(S("tpins"), 520)]), COL["link"]))
+    items.append(part("Sheath (one fitted, one spare)", mv(S("sheath"), 520, -90), COL["sheath"]))
+    items.append(part("Tip housing and grub screws", mv(S("tiph", "grubs"), 600), COL["tiph"]))
+    items.append(part("Camera head", mv(S("camera"), 680, 0, 0), COL["camera"]))
     items.append(part("Speaker and cover", mv(S("speaker", "spk_cover"), 260, -110), COL["speaker"]))
     cut = lambda k_, a, b_: win(C[k_].shape, a, b_, -80, 80)  # noqa: E731
     items.append(part("Camera cable (7 m, shown cut)", mv(cut("cable", xc - 900, xc), 0, -200, 0), COL["cable"]))
     items.append(part("Water guide tube (6.5 m, shown cut)", mv(cut("guide", xc - 900, xc), 0, -260, 0), "#9CA3AF"))
     items.append(part("Grip", mv(S("grip"), s1b - sec_x(4)[0], 270, 90), COL["grip"]))
+    items.append(part("Steering control: body, drum, shaft, lever, knob", mv(S("ctrl_body", "drum", "shaft", "lever", "knob", "ctrl_screw"), s1b - sec_x(4)[0], 270, 200), COL["ctrl"]))
+    items.append(part("Steering housings (4.4 m each, shown cut)", mv(win(S("housings"), xc - 900, xc), 0, -380, 0), COL["housing"]))
+    items.append(part("Steering wires (shown cut)", mv(win(S("swires"), xc - 300, D["x_th0"] + 10, -80, 80), 300, -440, 0), COL["swire"]))
     items.append(part("Water tube and bite valve (shown cut)", mv(win(S("wtube", "bite"), xc - 500, D["x_tip"] + 5, -80, 80), 300, -330), COL["wtube"]))
     # surface unit, pulled apart upward, placed behind the rods
     sdx, sdy = (s1b - 1150) - D["case_x"][0], -1250 - D["case_y"][0]
@@ -132,7 +146,7 @@ def sheets(only=None):
     # 101 rod section
     out.append(bv.component_sheet(
         Part("Rod section", win(rod2, s2x[0] - 1, s2x[1] + 1), COL["rod"]), nb,
-        dwg_no="VDS-DWG-101", title="VoidScope rod section (make 4): making sketch",
+        dwg_no="VDS-DWG-101", title="VoidScope rod section (make 4): making sketch", rev="P2", revisions=DWG_P2,
         material="6061-T6 drawn tube 38.1 x 1.47 mm (1.5 x 0.058 in)",
         view_shape=mv(rod2, -s2x[0], 0, -ZC), inset_view=(25, -60),
         notes=["Make four. Cut 1,050 mm, square, from 38.1 x 1.47 mm tube.",
@@ -143,7 +157,9 @@ def sheets(only=None):
                "",
                "",
                "Back end, section 4: no button hole; the tail cap pins go in",
-               "  4.0 mm holes top and bottom, 20 mm from the end (step 2).",
+               "  4.0 mm holes top and bottom, 20 mm from the end (step 2);",
+               "  two 4 mm housing holes on top, 10.5 mm off centre,",
+               "  332 and 368 mm from the back end.",
                "Front end: the coupler pin holes, 4.0 mm top and bottom 30 mm",
                "  from the end, are drilled through with the coupler fitted.",
                "Depth marks every 100 mm from the tip, section number at each",
@@ -174,28 +190,32 @@ def sheets(only=None):
     # 103 nose
     xn = D["x_nose"]
     out.append(bv.component_sheet(
-        Part("Nose", S("nose"), COL["nose"]), [part("Collar", S("collar"), COL["collar"]), part("Camera", S("camera"), COL["camera"]),
+        Part("Nose", S("nose"), COL["nose"]), [part("Collar", S("collar"), COL["collar"]), part("Base link", S("base"), COL["base"]),
                                                part("Bite valve", S("bite"), COL["bite"])],
         dwg_no="VDS-DWG-103", title="VoidScope nose: making sketch", material="6061-T6 round bar 50 mm, 80 mm long",
+        rev="P2", revisions=DWG_P2,
         view_shape=mv(S("nose"), -xn, 0, -ZC), inset_view=(30, -55),
         notes=["Lathe: face and turn to 48 mm outside, 75 mm long.",
                "Back end: bore 40.2 mm, 12 mm deep, for the collar spigot.",
-               "Offset the work 6.5 mm (4-jaw chuck): bore the camera",
-               "  29.3 mm from 12 to 72 mm, then 26 mm through the front",
-               "  3 mm. The camera sits below the axis; walls 2.85 mm.",
+               "Offset the work 6.5 mm (4-jaw chuck): bore 29.3 mm from",
+               "  12 mm right through the front, for the base link of the",
+               "  steerable tip. Thinnest wall 2.85 mm, at the bottom.",
                "Mill or saw and file on top: pocket 11.5 mm wide, floor",
                "  12 mm above the axis, 50 mm back from the front face.",
                "Groove on top 4.5 mm wide, floor 20 mm above the axis,",
                "  from the back face to the pocket (breaks into the bore).",
                "Three 4.5 mm holes 6 mm from the back face, at 30, 150",
                "  and 270 deg from the side; countersink for M4.",
-               "Break all edges 0.5 mm. Check: camera slides in by hand."], **base))
+               "Two M3 tapped holes, 7 mm from the front, either side on",
+               "  the bore's centre height, for the base link grub screws.",
+               "Break edges 0.5 mm. Check: base link spigot slides in."], **base))
     # 104 collar
     xcl = D["x_collar"]
     out.append(bv.component_sheet(
         Part("Collar", S("collar"), COL["collar"]), [part("Section 1 and coupler", win(S("rod1", "coupler1"), xcl - 200, xcl + 70), COL["rod"]),
                                                      part("Nose", S("nose"), COL["nose"]), part("Speaker", S("speaker", "spk_cover"), COL["speaker"])],
         dwg_no="VDS-DWG-104", title="VoidScope collar: making sketch", material="6061-T6 round bar 50 mm, 115 mm long",
+        rev="P2", revisions=DWG_P2,
         view_shape=mv(S("collar"), -xcl, 0, -ZC), inset_view=(30, -55),
         notes=["Lathe: 48 mm outside x 98 mm, then a 40 mm spigot 12 long.",
                "Back: bore 35.16 mm, 60 deep (a coupler must slide in).",
@@ -205,12 +225,111 @@ def sheets(only=None):
                "Button hole 8.5 mm on the button line, 30 mm from the back;",
                "  spotface 14 mm down to 20.3 mm from the axis.",
                "Six 5 mm outlets 79 mm from the back face, at 0, 45, 135,",
-               "  225, 270 and 315 deg from the button line toward the top.",
+               "  240, 270 and 300 deg from the button line toward the top.",
+               "Steering: two 3.2 mm stops 2 deep in the plenum side of the",
+               "  front wall, 10.5 mm each side, 7.5 below the axis; 1.2 mm",
+               "  wire holes on through the spigot.",
                "Speaker pocket on the far side: 20.5 mm, flat floor 16.8 mm",
                "  from the axis, 79 mm back; 3 mm wire hole into the plenum.",
                "Water exit 4.5 mm at 45 deg on top, axis crossing 12 mm",
                "  above the axis 72 mm from the back; groove 4.5 x 4 on top.",
-               "Check: coupler, nose and speaker fit; blow through outlets."], **base))
+               "Check: coupler, nose, speaker fit; blow through outlets."], **base))
+    # 110 bending link (printed)
+    lx0 = D["links"][1][0]
+    out.append(bv.component_sheet(
+        Part("Bending link", S("link2"), COL["link"]), [part("Links 1 and 3", S("link1", "link3"), "#9CA3AF"), part("Hinge pins", S("tpins"), COL["tpin"]),
+                                                        part("Steering wires", win(S("swires"), lx0 - 40, lx0 + 40), COL["swire"])],
+        dwg_no="VDS-DWG-110", title="VoidScope bending link (make 4): making sketch", material="PA12 nylon, laser sintered (SLS)",
+        view_shape=mv(S("link2"), -lx0, 0, -CAMZ), inset_view=(30, -60),
+        notes=["Make four by laser sintering in PA12 from the model;",
+               "  any online print service. No supports needed.",
+               "Body 33 mm outside, 23 mm bore, 10 mm long.",
+               "Back: inner lugs 8 mm wide, top and bottom, 11.5 to",
+               "  13.9 mm from the centre. Front: outer lugs, 14.1 to",
+               "  16.5 mm. Lug ends are rounded about the pin.",
+               "Pin holes 2.0 mm (ream after printing), 2.6 mm from",
+               "  each lug's root face, top and bottom.",
+               "Wire holes 1.2 mm on the two sides, 14 mm from the",
+               "  centre; run a 1.2 mm drill through each.",
+               "The faces close at 18 deg: that is the joint's stop.",
+               "Check: two links pin together and swing 18 deg each way."], **base))
+    # 111 base link
+    bx0 = D["x_nf"] - P["base"][1]
+    out.append(bv.component_sheet(
+        Part("Base link", S("base"), COL["base"]), [part("Nose", S("nose"), COL["nose"]), part("Link 1", S("link1"), COL["link"]),
+                                                    part("Grub screws", S("base_screws"), COL["tpin"])],
+        dwg_no="VDS-DWG-111", title="VoidScope base link: making sketch", material="6061-T6 round bar 35 mm, 25 mm long",
+        view_shape=mv(S("base"), -bx0, 0, -CAMZ), inset_view=(30, -60),
+        notes=["Lathe: 29.25 mm spigot 14 mm long, 33 mm flange 8 mm,",
+               "  12 mm bore through. The spigot is a close slide fit in",
+               "  the nose's 29.3 mm bore.",
+               "Front: leave a 4.9 mm stub at 33 mm outside; mill it",
+               "  away to two outer lugs, 8 mm wide, top and bottom,",
+               "  outside 14.1 mm from the centre; round the lug ends.",
+               "Drill 2.0 mm pin holes 2.6 mm ahead of the flange face.",
+               "Wire holes 1.2 mm, drilled on a slant: from 10.5 mm out",
+               "  and 1 mm low at the back face to 14 mm out on the",
+               "  centre line at the flange front (a drill jig helps).",
+               "Two dimples 1.5 mm deep, 7 mm from the spigot's front end,",
+               "  on the sides, for the M3 grub screws in the nose."], **base))
+    # 112 tip housing
+    tx0 = D["x_th0"] - P["link"][3]
+    out.append(bv.component_sheet(
+        Part("Tip housing", S("tiph"), COL["tiph"]), [part("Camera head", S("camera"), COL["camera"]), part("Link 4", S("link4"), COL["link"]),
+                                                      part("Grub screws", S("grubs"), COL["tpin"])],
+        dwg_no="VDS-DWG-112", title="VoidScope tip housing: making sketch", material="6061-T6 round bar 35 mm, 75 mm long",
+        view_shape=mv(S("tiph"), -tx0, 0, -CAMZ), inset_view=(25, -55),
+        notes=["Lathe: 33 mm outside, 66 mm long. From the front, bore",
+               "  29.3 mm 58 mm deep for the camera; the camera's face",
+               "  sits 3 mm back from the front edge. Bore 23 mm through",
+               "  the 8 mm back wall for the cable.",
+               "Back: leave a 4.9 mm stub; mill it to two inner lugs 8 mm",
+               "  wide, top and bottom, 11.5 to 13.9 mm from the centre;",
+               "  round the ends; drill 2.0 mm pin holes.",
+               "Wire anchors: 1.2 mm holes 14 mm out on the two sides,",
+               "  4 mm deep, into 3 mm cross holes from the outside where",
+               "  the crimped ferrules sit.",
+               "Two M3 tapped holes, 20 mm from the camera's back, at 60",
+               "  and 120 deg, for nylon-tipped grub screws."], **base))
+    # 113 steering control body (printed)
+    cb_ = S("ctrl_body")
+    cbb = cb_.bounding_box()
+    out.append(bv.component_sheet(
+        Part("Steering control body", cb_, COL["ctrl"]), [part("Section 4", win(S("rod4"), 250, 500), COL["rod"]), part("Grip", win(S("grip"), 200, 340), COL["grip"]),
+                                                          part("Drum and lever", S("drum", "lever", "shaft"), COL["drum"])],
+        dwg_no="VDS-DWG-113", title="VoidScope steering control body: making sketch", material="PA12 nylon, laser sintered (SLS)",
+        view_shape=mv(cb_, -cbb.min.X, -(cbb.min.Y + cbb.max.Y) / 2, -ZC), inset_view=(25, -60),
+        notes=["Print in one piece in PA12 from the model: a collar that",
+               "  clamps section 4 (38.1 mm bore, 50 mm outside, 64 long),",
+               "  a pad on top and two cheeks 3 mm thick, 28 mm apart.",
+               "Split along the bottom, 2 mm wide; two lugs with a 4.2 mm",
+               "  hole for the M4 clamp screw and nyloc nut.",
+               "Two 3.2 mm holes down through the pad, 10.5 mm either side",
+               "  of centre and 36 mm apart along the rod: the housings",
+               "  stop 2 mm under the top; 1.2 mm holes on up for the wires.",
+               "Shaft holes 6.2 mm through both cheeks, 50 mm above the",
+               "  rod's centre line; mark the centre detent on one cheek.",
+               "Fit 8 mm ahead of the grip, holes over the rod's holes.",
+               "Check: clamps firmly; drum turns freely between cheeks."], **base))
+    # 114 drum and lever
+    dl = S("drum", "lever")
+    dlb = dl.bounding_box()
+    out.append(bv.component_sheet(
+        Part("Drum and lever", dl, COL["drum"]), [part("Control body", S("ctrl_body"), COL["ctrl"]), part("Shaft and knob", S("shaft", "knob"), COL["knob"])],
+        dwg_no="VDS-DWG-114", title="VoidScope steering drum and lever: making sketch", material="6061-T6 bar 40 mm; 5052 sheet 3 mm",
+        view_shape=mv(dl, -dlb.min.X, -dlb.min.Y, -dlb.min.Z), inset_view=(20, -40),
+        notes=["Drum: turn 36 mm across, 27 mm long; 6 mm bore, a press",
+               "  fit on the shaft (or pin it). Two grooves 1 mm deep,",
+               "  10.5 mm either side of the middle, one for each wire.",
+               "Drill and tap M3 across each groove for a wire clamp",
+               "  screw with a washer; the wires lie on opposite sides.",
+               "Lever: cut from 3 mm sheet, 12 mm wide, 59 mm from the",
+               "  shaft hole to the end, rounded; 6 mm hole; thumb peg",
+               "  12 mm across riveted at the end.",
+               "Lever and drum are fixed to the shaft: the lever turns",
+               "  71 deg for 90 deg at the tip, 35 deg for 45 deg.",
+               "Two stops on the cheek limit it to 71 deg each way.",
+               "Check: from straight, each way, the tip bends 90 deg."], **base))
     # 105 tail cap
     out.append(bv.component_sheet(
         Part("Tail cap", S("tailcap"), COL["tailcap"]), [part("Section 4", win(S("rod4"), 0, 200), COL["rod"]),
@@ -343,16 +462,19 @@ def joints():
         subtitle="Seen from the button side. The button stands just proud in a 14 mm spotface so a fingertip can press it",
         elev=20, azim=-15, size=(8, 6)))
     # 03 head cut open
+    xb1 = D["x_b1"]
     out.append(bv.joint([
-        part("Collar", win(S("collar"), xc + 40, D["x_tip"] + 1), COL["collar"]),
+        part("Collar", win(S("collar"), xc + 40, xb1 + 1), COL["collar"]),
         part("Nose", S("nose"), COL["nose"]),
-        part("Camera head", S("camera"), COL["camera"]),
-        part("Spacer ring and grommet", S("cam_ring", "spg_grommet"), COL["ring"]),
+        part("Base link", S("base"), COL["base"]),
+        part("Spigot grommet", S("spg_grommet"), COL["ring"]),
         part("M4 screws", S("nose_screws"), COL["pins"]),
-        part("Camera cable", win(S("cable"), xc + 40, D["x_tip"]), COL["cable"]),
-        part("Water tube and bite valve", win(S("wtube", "bite"), xc + 40, D["x_tip"] + 1), COL["wtube"])],
-        OUT / "joint-03.png", "Joint 3: nose on the collar spigot, camera clamped against the lip",
-        subtitle="Cut on the vertical centre plane. The spacer ring pushes the camera onto the 26 mm lip; three M4 screws hold the nose",
+        part("Camera cable", win(S("cable"), xc + 40, xb1 + 1), COL["cable"]),
+        part("Steering wire", win(S("swires"), xc + 40, xb1 + 1), COL["swire"]),
+        part("Steering housing, in its stop", win(S("housings"), xc + 40, xb1), COL["housing"]),
+        part("Water tube and bite valve", win(S("wtube", "bite"), xc + 40, xb1 + 1), COL["wtube"])],
+        OUT / "joint-03.png", "Joint 3: nose on the collar spigot, base link of the tip in the nose",
+        subtitle="Cut on the vertical centre plane. Three M4 screws hold the nose; the steering wire leaves its housing stop in the collar wall",
         cut="+Y", elev=8, azim=-80, size=(8, 6)))
     # 04 water path at the head (from above)
     out.append(bv.joint([
@@ -369,7 +491,7 @@ def joints():
         part("Speaker (20 mm, IP67)", S("speaker"), COL["speaker"]),
         part("Perforated cover, bonded", S("spk_cover"), COL["cover"])],
         OUT / "joint-05.png", "Joint 5: speaker in its pocket on the collar",
-        subtitle="Seen from the speaker side. Flat pocket floor; cover flush below the 48 mm outline; outlets at 45 deg either side",
+        subtitle="Seen from the speaker side. Flat pocket floor; cover flush below the 48 mm outline; outlets 45 deg above, 60 deg below",
         elev=10, azim=-100, size=(8, 6)))
     # 06 tail cap cut open
     out.append(bv.joint([
@@ -404,6 +526,32 @@ def joints():
         OUT / "joint-08.png", "Joint 8: monitor on its bracket in the lid",
         subtitle="Seen from the operator's side. Bracket feet bolted through the lid with sealing washers",
         elev=15, azim=-160, size=(8, 6)))
+    # 09 bending section cut open (sheath left off)
+    xn = D["x_nf"]
+    out.append(bv.joint([
+        part("Base link", S("base"), COL["base"]),
+        part("Bending links (4)", S(*LINKS), COL["link"]),
+        part("Hinge pins, 2 mm", S("tpins"), COL["tpin"]),
+        part("Tip housing", S("tiph"), COL["tiph"]),
+        part("Camera head", S("camera"), COL["camera"]),
+        part("Steering wire, anchored in the tip", win(S("swires"), xn - 20, D["x_tip"]), COL["swire"]),
+        part("Camera cable", win(S("cable"), xn - 20, D["x_tip"]), COL["cable"])],
+        OUT / "joint-09.png", "Joint 9: the bending section, cut open, sheath left off",
+        subtitle="Cut on the centre plane, from the side. Lugs nest top and bottom on 2 mm pins; the wire runs through each link to its anchor",
+        cut="+Y", elev=12, azim=-80, size=(8, 6)))
+    # 10 steering control on section 4, cut open
+    x0c, x1c = D["ctrl_x"]
+    out.append(bv.joint([
+        part("Section 4", win(S("rod4"), x0c - 60, x1c + 60), COL["rod"]),
+        part("Grip (front end)", win(S("grip"), x0c - 60, x1c), COL["grip"]),
+        part("Control body, clamped", S("ctrl_body", "ctrl_screw"), COL["ctrl"]),
+        part("Drum on its shaft", S("drum", "shaft"), COL["drum"]),
+        part("Lever with thumb peg", S("lever"), COL["lever"]),
+        part("Friction lock knob", S("knob"), COL["knob"]),
+        part("Steering housings, up through section 4", win(S("housings"), x0c - 60, x1c + 60), COL["housing"])],
+        OUT / "joint-10.png", "Joint 10: steering control clamped on section 4",
+        subtitle="Seen from the front right and above. Each housing comes up through a 4 mm hole and stops in the pad; its wire wraps the drum",
+        elev=28, azim=-50, size=(8, 6)))
     return out
 
 
@@ -428,68 +576,89 @@ def steps():
        "tail cap into section 4", "Epoxy on the plug; push it home against the flange, barb away from the button line; drill and pin",
        elev=20, azim=-60)
     st(3, [part("Section 4 with tail cap", win(S("rod4", "tailcap", "barb"), -5, 600), COL["rod"])],
-       [part("Grip", S("grip"), COL["grip"], (500, 0, 0))],
-       "grip onto section 4", "Wet the inside with soapy water; slide it on from the front end until it is 10 mm from the flange",
+       [part("Grip", S("grip"), COL["grip"], (500, 0, 0)),
+        part("Steering control body and clamp screw", S("ctrl_body", "ctrl_screw"), COL["ctrl"], (0, 0, 140))],
+       "grip and steering control body onto section 4",
+       "Grip on from the front end to 10 mm from the flange; then the control body 8 mm ahead of it, over the two 4 mm holes; M4 clamp screw",
        elev=20, azim=-60)
     st(4, [part("Collar", S("collar"), COL["collar"])],
        [part("Speaker, leads through the wire hole", S("speaker"), COL["speaker"], (0, -50, 0)),
         part("Perforated cover", S("spk_cover"), COL["cover"], (0, -90, 0))],
        "speaker into the collar", "Neutral-cure silicone on the pocket floor; leads into the plenum; cover bonded flush",
        elev=15, azim=-110)
-    st(5, [part("Section 4 with tail cap and grip (sections 3, 2, 1 beyond)", win(S("rod4", "tailcap", "grip", "barb", "tc_grommets"), -5, 700), COL["rod"])],
-       [part("Camera cable", win(S("cable"), -150, 700), COL["cable"], (-400, 0, 0)), part("Guide tube", win(S("guide"), -150, 700), "#9CA3AF", (-400, 0, 0))],
-       "thread the cable and guide tube through every section",
-       "From the tail cap end, through both grommets and on through sections 4, 3, 2 and 1; 1 m of each left out at the front. Lines drawn cut short",
+    st(5, [part("Section 4 with tail cap, grip and control body (sections 3, 2, 1 beyond)",
+                win(S("rod4", "tailcap", "grip", "barb", "tc_grommets", "ctrl_body"), -5, 700), COL["rod"])],
+       [part("Camera cable", win(S("cable"), -150, 700), COL["cable"], (-400, 0, 0)), part("Guide tube", win(S("guide"), -150, 700), "#9CA3AF", (-400, 0, 0)),
+        part("Steering housings (2), down through section 4", win(S("housings"), 300, 700), COL["housing"], (0, 0, 160))],
+       "thread the cable, guide tube and steering housings",
+       "Cable and guide through the tail cap grommets; each housing down through the control body and its hole in section 4; all on through sections 4 to 1. Lines drawn cut short",
        elev=20, azim=-60)
     st(6, [part("Collar", S("collar", "speaker", "spk_cover"), COL["collar"])],
        [part("Guide tube end", win(S("guide"), xc - 200, xc + 80), "#9CA3AF", (-120, 0, 0)),
-        part("Cable through the spigot grommet", win(S("cable", "spg_grommet"), xc - 200, D["x_nose"] + 20), COL["cable"], (-120, 0, 0))],
-       "cable and guide into the collar",
-       "Guide 6 mm into the plenum; cable through the grommet; solder to the camera pigtail and speaker leads, heat-shrink",
+        part("Cable through the spigot grommet", win(S("cable", "spg_grommet"), xc - 200, D["x_nose"] + 20), COL["cable"], (-120, 0, 0)),
+        part("Housings into their stops, wires through", win(S("housings", "swires"), xc - 200, D["x_nose"] + 20), COL["housing"], (-120, 0, 0))],
+       "cable, guide tube and housings into the collar",
+       "Guide 6 mm into the plenum; cable through the grommet; each housing into its stop in the front wall, its wire on through the spigot",
        elev=20, azim=-60)
     st(7, [part("Collar", S("collar", "spg_grommet"), COL["collar"])],
-       [part("Spacer ring", S("cam_ring"), COL["ring"], (60, 0, 0)), part("Camera head", S("camera"), COL["camera"], (120, 0, 0)),
-        part("Nose", S("nose"), COL["nose"], (220, 0, 0)), part("M4 screws (3)", S("nose_screws"), COL["pins"], (220, 0, 0))],
-       "camera and nose onto the collar",
-       "Camera into the nose from behind, LEDs against the lip; ring next; nose over the spigot; three M4 screws, threadlocker",
+       [part("Nose", S("nose"), COL["nose"], (160, 0, 0)), part("M4 screws (3)", S("nose_screws"), COL["pins"], (160, 0, 0))],
+       "nose onto the collar",
+       "Thread the cable and both wires through the nose bore; nose over the spigot, pocket on top; three M4 screws with threadlocker",
        elev=20, azim=-60)
-    head = S("collar", "nose", "camera", "speaker", "spk_cover", "nose_screws")
-    st(8, [part("Head", head, COL["collar"])],
+    nf = D["x_nf"]
+    st(8, [part("Collar and nose", S("collar", "nose", "nose_screws"), COL["collar"])],
+       [part("Base link and grub screws", S("base", "base_screws"), COL["base"], (60, 0, 0)),
+        part("Bending links and pins", S(*LINKS, "tpins"), COL["link"], (130, 0, 0)),
+        part("Sheath", S("sheath"), COL["sheath"], (130, 0, 60)),
+        part("Tip housing, camera and grub screws", S("tiph", "camera", "grubs"), COL["tiph"], (200, 0, 0)),
+        part("Steering wires", win(S("swires"), nf - 20, D["x_tip"]), COL["swire"], (130, 0, -50))],
+       "steerable tip onto the nose",
+       "Wires through every link; pin the links; sheath on; camera in; crimp the wires; base link into the nose, two grub screws",
+       elev=22, azim=-60)
+    head = S("collar", "nose", "speaker", "spk_cover", "nose_screws", "base", "base_screws", *LINKS, "tpins", "sheath", "tiph", "camera", "grubs")
+    st(9, [part("Head", head, COL["collar"])],
        [part("Section 1 with coupler", win(S("rod1", "coupler1", "button1"), xc - 400, xc + 70), COL["rod"], (-150, 0, 0))],
        "section 1 into the collar",
        "Press the button, slide the coupler home until the tube butts the collar, and the button clicks into the spotface",
        elev=20, azim=-60)
     j1 = sec_x(1)[0]
-    st(9, [part("Section 1 (back end) and the head beyond", win(S("rod1", "cable", "guide"), j1 - 5, j1 + 500), COL["rod"])],
+    st(10, [part("Section 1 (back end) and the head beyond", win(S("rod1", "cable", "guide", "housings"), j1 - 5, j1 + 500), COL["rod"])],
        [part("Section 2 with its coupler (front end shown)", win(S("rod2", "coupler2", "button2"), j1 - 500, j1 + 70), COL["coupler"], (-250, 0, 0))],
        "join sections 2, 3 and 4",
        "The same at each joint: slide the section along the lines, press its button, push home until it clicks and the tube ends butt",
        elev=20, azim=-60)
-    st(10, [part("Head", head, COL["collar"])],
-       [part("Water tube (single use), through the guide", win(S("wtube"), xc - 150, D["x_tip"]), COL["wtube"], (-80, 0, 0)),
+    x0c, x1c = D["ctrl_x"]
+    st(11, [part("Section 4 with grip and control body", win(S("rod4", "grip", "ctrl_body", "housings"), x0c - 120, x1c + 80), COL["rod"])],
+       [part("Drum, wires wrapped and clamped", S("drum"), COL["drum"], (0, 0, 90)), part("Shaft", S("shaft"), COL["knob"], (0, -90, 0)),
+        part("Lever", S("lever"), COL["lever"], (0, 80, 0)), part("Friction lock knob", S("knob"), COL["knob"], (0, -130, 0))],
+       "steering wires onto the drum; set the tip straight",
+       "Tip straight, lever upright: wrap each wire once round its groove and clamp it; shaft through cheeks and drum; lever on; lock knob on",
+       elev=24, azim=-55)
+    st(12, [part("Head", head, COL["collar"])],
+       [part("Water tube (single use), through the guide", win(S("wtube"), xc - 150, D["x_nf"]), COL["wtube"], (-80, 0, 0)),
         part("Bite valve", S("bite"), COL["bite"], (0, 0, 40))],
        "water tube through the guide and into the bite valve pocket",
        "Push it in from the surface end until it shows at the exit; lay it in the groove; fit the valve and press it into the pocket",
        elev=35, azim=-50)
-    st(11, [part("Case base", S("case"), COL["case"])],
+    st(13, [part("Case base", S("case"), COL["case"])],
        [part("Equipment plate on spacers", S("eplate", "espacers"), COL["eplate"], (0, 0, 150))],
        "equipment plate into the case", "Four M5 screws up through the floor with bonded sealing washers, 6 mm spacers, nyloc nuts on top",
        elev=40, azim=-60)
-    st(12, [part("Case and plate", S("case", "eplate", "espacers"), COL["case"])],
+    st(14, [part("Case and plate", S("case", "eplate", "espacers"), COL["case"])],
        [part("Battery and strap", S("battery"), COL["battery"], (0, 0, 160)), part("Blower", S("blower", "blower_legs"), COL["blower"], (0, 0, 160)),
         part("Control modules", S("modules"), COL["modules"], (0, 0, 160)), part("Flow meter and bracket", S("flowmeter", "fm_bracket"), COL["flowmeter"], (0, 0, 200))],
        "battery, blower, modules and flow meter onto the plate", "Wire as the wiring picture shows; battery lead unplugged and fuse out",
        elev=45, azim=-60, label_done=False)
-    st(13, [part("Case with everything on the plate", S("case", "eplate", "battery", "blower", "modules", "flowmeter", "fm_bracket"), COL["case"])],
+    st(15, [part("Case with everything on the plate", S("case", "eplate", "battery", "blower", "modules", "flowmeter", "fm_bracket"), COL["case"])],
        [part("Camera socket, headset socket, air outlet", S("fittings"), COL["fittings"], (0, 80, 0)), part("Intake filter", S("filter"), COL["filter"], (0, -100, 0))],
        "wall fittings and intake filter", "Each through its hole with its seal outside and nut inside; hoses from filter to blower to meter to outlet",
        elev=30, azim=-60, label_done=False)
-    st(14, [part("Lid", S("lid"), COL["lid"])],
+    st(16, [part("Lid", S("lid"), COL["lid"])],
        [part("Monitor bracket", S("dbracket"), COL["dbracket"], (-40, 0, 0)), part("Monitor", S("monitor"), COL["monitor"], (-100, 0, 0))],
        "monitor and bracket into the lid", "Bracket feet through the lid on four M5 screws with sealing washers; monitor on its rear M4 holes",
        elev=15, azim=-160)
     allp = [k for k in C if k not in ("stand", "bottle")]
-    st(15, [part("Probe and surface unit", S(*allp), "#D1D5DB")],
+    st(17, [part("Probe and surface unit", S(*allp), "#D1D5DB")],
        [part("Reservoir stand", S("stand"), COL["stand"], (300, 0, 0)), part("Water bottle", S("bottle"), COL["bottle"], (300, 0, 300))],
        "set up at the hole: stand, bottle, hose and plugs",
        "Bottle at most 1 m above the tip; water set to the guide; air hose to the barb; cable plug in; then the safety stops",

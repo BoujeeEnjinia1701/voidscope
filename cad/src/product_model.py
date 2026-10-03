@@ -3,8 +3,10 @@
 Finished-product look for photoreal renders: the four anodised rod sections with painted depth
 bands under clear heat-shrink, the teal couplers and red snap buttons at the joints, the turned
 head (collar with six air outlets and the speaker grille, nose with the camera window and LEDs,
-the blue bite valve parked on top with its water tube in the groove), the tail cap with its brass
-air barb and the black grip; the air hose, camera cable and water tube running to the surface unit;
+the blue bite valve parked on top with its water tube in the groove), the steerable camera tip
+(VDS-DDR-003: black silicone sheath over the bending section, aluminium tip housing with the camera
+window and LEDs), shown bent 45 deg in the hero and detail views and straight in the exploded view,
+the steering control with its red lever on section 4, the tail cap with its brass air barb and the black grip; the air hose, camera cable and water tube running to the surface unit;
 the orange IP67 case with its lid open, the 7 in monitor showing a picture, the equipment plate
 with battery, blower, flow meter and control modules, the wall fittings and intake filter; the
 water bottle on its light stand. Context: a broken concrete wall with a 51 mm core hole that the
@@ -29,23 +31,28 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / ".kit"))
 
 from build123d import Box, Pos, Rot, Sphere  # noqa: E402
-from model import PARAMS, build_components, derived, xcyl, xtube, rod_between  # noqa: E402
+from model import PARAMS, build_components, derived, bent_tip, xcyl, xtube, rod_between  # noqa: E402
+
+TIP_BEND = -45.0        # deg; the hero and detail views show the tip steered 45 deg toward -Y (toward the viewer)
 
 TITLE = "VoidScope: rubble void search probe with water and air lines"
 
 RENDER_VIEWS = [
-    {"name": "hero", "groups": ["probe", "head", "surface", "lines", "context"], "explode": False, "el": 22, "az": -35,
+    {"name": "hero", "groups": ["probe", "head", "tipbent", "surface", "lines", "context"], "explode": False, "el": 22, "az": -35,
      "note": "Product render from the front right and above (about 22 deg elevation): the probe pushed through a 51 mm "
-             "core hole in a broken wall, head and bite valve in the void beyond, surface unit with its lid open and "
-             "water bottle on its stand beside the operator (1.75 m mannequin)"},
-    {"name": "exploded", "groups": ["probe", "head", "surface"], "explode": True, "el": 28, "az": -50,
+             "core hole in a broken wall, head in the void beyond with its camera tip steered 45 deg, steering lever on "
+             "the rod ahead of the grip, surface unit with its lid open and water bottle on its stand beside the "
+             "operator (1.75 m mannequin)"},
+    {"name": "exploded", "groups": ["probe", "head", "tipstraight", "surface"], "explode": True, "el": 28, "az": -50,
      "note": "Exploded view from the front right and above (about 28 deg elevation): rod sections, couplers and snap "
-             "buttons pulled apart along the probe; collar, speaker, camera and nose ahead of section 1; tail cap and "
-             "grip behind; surface unit plate, battery, blower, flow meter, modules and monitor lifted out of the case"},
-    {"name": "detail", "groups": ["head"], "explode": False, "el": 18, "az": -30,
-     "note": "Detail from the front right, slightly above (about 18 deg elevation), close on the head: camera window "
-             "and LEDs in the nose, bite valve parked on top with its water tube in the groove, six air outlets and "
-             "the speaker grille on the collar, front of section 1 with its snap button"},
+             "buttons pulled apart along the probe; collar, speaker, nose, base link, bending links, tip housing and "
+             "camera ahead of section 1; steering control lifted off section 4; tail cap and grip behind; surface unit "
+             "plate, battery, blower, flow meter, modules and monitor lifted out of the case"},
+    {"name": "detail", "groups": ["head", "tipbent"], "explode": False, "el": 18, "az": -30,
+     "note": "Detail from the front right, slightly above (about 18 deg elevation), close on the head: camera tip "
+             "steered 45 deg on its sheathed bending section, camera window and LEDs in the tip housing, bite valve "
+             "parked on top of the nose with its water tube in the groove, six air outlets and the speaker grille on "
+             "the collar, front of section 1 with its snap button"},
 ]
 
 C_AL = "#C9CED6"        # clear anodised aluminium
@@ -60,8 +67,6 @@ C_CONC = "#A8A29E"
 C_CLAY = "#B9B4AC"
 
 LOOK = {  # model key: (display name, colour, material, group)
-    "camera": ("Camera head, stainless, window and lens", "#2B2F36", "metal", "head"),
-    "cam_ring": ("Camera spacer ring, rubber", C_BLK, "rubber", "head"),
     "collar": ("Collar, bead-blasted aluminium", C_HEAD, "metal", "head"),
     "nose": ("Nose, bead-blasted aluminium", "#9AA0A8", "metal", "head"),
     "nose_screws": ("Nose screws, stainless", "#D1D5DB", "metal", "head"),
@@ -89,9 +94,29 @@ LOOK = {  # model key: (display name, colour, material, group)
     "monitor": ("Monitor housing, black", "#111111", "plastic", "surface"),
     "dbracket": ("Monitor bracket, aluminium", "#9CA3AF", "metal", "surface"),
     "stand": ("Reservoir light stand, black", "#202225", "painted", "surface"),
+    "base": ("Base link, bead-blasted aluminium", "#9AA0A8", "metal", "head"),
+    "ctrl_body": ("Steering control body, black nylon", "#1F2937", "plastic", "probe"),
+    "drum": ("Steering drum, aluminium", "#B5BAC1", "metal", "probe"),
+    "shaft": ("Drum shaft, stainless", "#D1D5DB", "metal", "probe"),
+    "lever": ("Steering lever, red", C_RED, "painted", "probe"),
+    "knob": ("Friction lock knob, black", "#151515", "plastic", "probe"),
+    "ctrl_screw": ("Clamp screw, stainless", "#D1D5DB", "metal", "probe"),
     "bottle": ("Water bottle, translucent polypropylene", "#DCEBF5", "clear", "surface"),
 }
-EXPLODE = {"camera": (300, 0, 0), "cam_ring": (240, 0, 0), "nose": (380, 0, 0), "nose_screws": (380, 0, 60),
+TIP_LOOK = {  # steerable tip parts, drawn bent (hero, detail) or straight (exploded)
+    "link1": ("Bending link 1", "#2B2F36", "plastic"), "link2": ("Bending link 2", "#2B2F36", "plastic"),
+    "link3": ("Bending link 3", "#2B2F36", "plastic"), "link4": ("Bending link 4", "#2B2F36", "plastic"),
+    "tpins": ("Hinge pins, stainless", "#D1D5DB", "metal"),
+    "sheath": ("Bending section sheath, black silicone", "#151515", "rubber"),
+    "tiph": ("Tip housing, bead-blasted aluminium", C_HEAD, "metal"),
+    "grubs": ("Camera grub screws, stainless", "#D1D5DB", "metal"),
+    "camera": ("Camera head, stainless, window and lens", "#2B2F36", "metal"),
+}
+EXPLODE = {"camera": (700, 0, 0), "nose": (380, 0, 0), "nose_screws": (380, 0, 60),
+           "base": (440, 0, 0), "link1": (500, 0, 0), "link2": (515, 0, 0), "link3": (530, 0, 0), "link4": (545, 0, 0),
+           "tpins": (520, 0, 70), "sheath": (520, 0, -90), "tiph": (620, 0, 0), "grubs": (620, 0, 60),
+           "ctrl_body": (0, 0, 120), "drum": (0, 0, 220), "shaft": (0, -80, 220), "lever": (0, 80, 220), "knob": (0, -130, 220),
+           "ctrl_screw": (0, 0, 60),
            "collar": (160, 0, 0), "spg_grommet": (200, 0, 0), "speaker": (160, -90, 0), "spk_cover": (160, -130, 0),
            "bite": (380, 0, 90), "tailcap": (-200, 0, 0), "barb": (-200, -60, 0), "tc_grommets": (-260, 0, 0),
            "tc_pins": (-200, 0, 50), "grip": (0, 0, 120), "eplate": (0, 0, 180), "espacers": (0, 0, 90),
@@ -154,20 +179,34 @@ def product_parts(P=PARAMS):
     # every other modelled part with its look
     for key, (name, col, mat, grp) in LOOK.items():
         add(name, C[key].shape, col, mat, C[key].bom, grp, EXPLODE.get(key, (0, 0, 0)))
+    # steerable tip: straight for the exploded view, steered TIP_BEND for the hero and detail views
+    bent = bent_tip(P, TIP_BEND, C)
+    for key, (name, col, mat) in TIP_LOOK.items():
+        add(name, C[key].shape, col, mat, C[key].bom, "tipstraight", EXPLODE.get(key, (0, 0, 0)))
+        add(name, bent[key], col, mat, C[key].bom, "tipbent")
     # monitor picture (appearance only): a dark green-grey screen on the monitor's face
     mon = C["monitor"].shape.bounding_box()
     # the lid is open toward -X: the screen face is the monitor's -X face
     scr = Pos(mon.min.X - 0.4, (mon.min.Y + mon.max.Y) / 2, (mon.min.Z + mon.max.Z) / 2) * Box(0.8, mon.size.Y - 16, mon.size.Z - 16)
     add("Monitor screen, glass", scr, "#2F4A3A", "screen", 16, "surface", EXPLODE["monitor"])
-    # camera LEDs as small dots on the camera face (appearance only)
+    # camera LEDs as small dots on the camera face (appearance only), straight and steered
     camz = zc + P["nose"][3]
     leds = None
     for i in range(12):
         a = 2 * math.pi * i / 12
         dot = Pos(D["cam_x1"] + 0.2, 10.5 * math.cos(a), camz + 10.5 * math.sin(a)) * Sphere(1.0)
         leds = dot if leds is None else leds + dot
-    add("Camera LEDs, white", leds, "#FFF7E0", "clear", 1, "head", EXPLODE["camera"])
-    add("Camera lens, glass", xcyl(D["cam_x1"] - 0.5, D["cam_x1"] + 0.3, 4.5, 0, camz), "#0B0F14", "clear", 1, "head", EXPLODE["camera"])
+    lens = xcyl(D["cam_x1"] - 0.5, D["cam_x1"] + 0.3, 4.5, 0, camz)
+
+    def steer(shape):
+        ph = TIP_BEND / P["n_joint"]
+        for x in reversed(D["pivots"]):
+            shape = Pos(x, 0, camz) * Rot(0, 0, ph) * Pos(-x, 0, -camz) * shape
+        return shape
+    add("Camera LEDs, white", leds, "#FFF7E0", "clear", 1, "tipstraight", EXPLODE["camera"])
+    add("Camera lens, glass", lens, "#0B0F14", "clear", 1, "tipstraight", EXPLODE["camera"])
+    add("Camera LEDs, white", steer(leds), "#FFF7E0", "clear", 1, "tipbent")
+    add("Camera lens, glass", steer(lens), "#0B0F14", "clear", 1, "tipbent")
     # water tube and cable inside the rod (head end only, visible through the outlets and the groove)
     add("Water tube, blue polyurethane", C["wtube"].shape & Pos(D["x_collar"] + 60, 0, zc) * Box(240, 80, 80), "#3B82F6", "plastic", 11, "head",
         (380, 0, 90))

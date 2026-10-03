@@ -3,7 +3,7 @@ doc_id: VDS-PRC-001
 title: VoidScope design precis
 project: VoidScope
 doc_type: Precis
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -21,13 +21,17 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: "TRL 3: constructable design (VDS-DDR-002), numbers from VDS-CAL-001, decisions recorded under Amish's 2026-10-03 pre-approval"
+- version: "0.4"
+  date: '2026-10-03'
+  author: Amish Chadha
+  change: "Steerable camera tip (Amish's decision 3A, VDS-DDR-003): summary, key choice 2, numbers from VDS-CAL-001 v0.2, patent note"
 ---
 
 # VoidScope design precis
 
 Searches rubble voids with a camera probe that also delivers water and air to a trapped survivor.
 
-VoidScope is a 4.4 m push probe, 48 mm across at its widest, that passes a standard 51 mm core hole. A sealed 1080p camera with its own lights sits in an aluminium head at the tip, with a small speaker for two-way talk. The rod is the air duct: a battery blower at the surface pushes filtered air down the bore and out of six holes at the head, at no more than 0.9 kPa even with every hole blocked. Inside the rod a guide tube carries a single-use water tube from a bottle at the surface to a bite valve on the nose, so a survivor can sip a slow gravity drip of at most 4.5 mL/min. The estimated parts cost is USD 1,578 against a value-engineering target of USD 2,000.
+VoidScope is a 4.5 m push probe, 48 mm across at its widest, that passes a standard 51 mm core hole. A sealed 1080p camera with its own lights sits in a steerable tip that a thumb lever on the rod bends up to 90° to either side, so the camera looks around a bend from a straight hole; a small speaker on the head gives two-way talk. The rod is the air duct: a battery blower at the surface pushes filtered air down the bore and out of six holes at the head, at no more than 0.9 kPa even with every hole blocked. Inside the rod a guide tube carries a single-use water tube from a bottle at the surface to a bite valve on the nose, so a survivor can sip a slow gravity drip of at most 4.5 mL/min. The estimated parts cost is USD 1,780 against a value-engineering target of USD 2,000.
 
 ![Figure 1. VoidScope concept: probe, surface unit and reservoir stand](../media/hero.png)
 
@@ -66,7 +70,7 @@ When they find someone, they leave the probe in place. They talk through the spe
 All choices below were decided on 2026-10-03 under Amish's pre-approval ("I pre-approve the batch runs along with any recommendations you come up with"); the TRL 2 choices are in VDS-DDR-001 and the changes made for construction in VDS-DDR-002.
 
 1. **Lines inside the rod, with the bore as the air duct.** Nothing runs outside to catch on rebar, and the bore gives the air a large, low-loss path: about 10 Pa over the rod at 20 L/min.
-2. **Rigid sectioned rod, no articulation.** Cheap, repairable and clear of articulation patents. It cannot follow bends (R11, not met).
+2. **Rigid sectioned rod with a steerable camera tip.** The rod stays cheap and repairable and still cannot follow bends; instead the camera tip, on five pinned joints steered by two wires from a thumb lever, looks around a 45° bend from a straight hole (R11 as restated by Amish on 2026-10-03, decision 3A; VDS-DDR-003).
 3. **Bought sealed camera head in a machined nose.** Sealing a camera to IP68 is the hardest part to make well; a pipe-inspection head already is.
 4. **Tent-pole storage.** The sections stay threaded on the cable and guide tube, so setting up means only joining four snap buttons.
 5. **Pressure-limited air.** A centrifugal blower whose shut-off pressure is at or below 1 kPa cannot pressurise a blocked void beyond that, whatever the knob says.
@@ -81,22 +85,24 @@ All choices below were decided on 2026-10-03 under Amish's pre-approval ("I pre-
 | Quantity | Value |
 | --- | --- |
 | Largest diameter; clearance in a 51 mm hole | 48 mm; 1.5 mm a side |
-| Probe length; working length | 4,398 mm; 4,063 mm |
-| Probe mass; surface unit mass | 3.7 kg; 6.2 kg |
-| Tip droop with 2 m unsupported | 15 mm |
-| Buckling load of the whole rod | 1,001 N (5 times a 200 N push) |
+| Probe length; length that can go into a void | 4,538 mm; 4,131 mm |
+| Camera tip: bend each way; sideways reach bent 45° | 90°; 83 mm |
+| Probe mass; surface unit mass | 4.2 kg; 6.2 kg |
+| Tip droop with 2 m unsupported | 17 mm |
+| Buckling load of the whole rod | 940 N (4.7 times a 200 N push) |
 | Pixels across a 20 mm letter at 1 m | 19 (10 needed) |
 | Water ceiling: 1 m at 20 °C; 2 m at 40 °C | 1.5 mL/min; 4.5 mL/min |
 | Air: total loss at 20 L/min; flow at full speed | 0.38 kPa; 44 L/min |
 | Highest air pressure at a blocked tip | 0.9 kPa |
 | Run time, video and light, one pack at -10 °C | 4.3 h |
-| Estimated cost | USD 1,578 (USD 422 under the USD 2,000 target) |
+| Estimated cost | USD 1,780 (USD 220 under the USD 2,000 target) |
 
 ## Patent design-arounds
 
 From the preliminary patent, trademark and prior-art screen (not legal advice):
 
 - Run a focused CPC patent search on combined search camera and supply probes before public release (the preliminary screen found no blocking patent).
+- The rigid rod was first chosen partly to stay clear of articulation patents. The steerable tip (decision 3A) uses a plain two-wire pinned-link bending section of the kind long used in borescopes, but the focused search should now also cover articulating camera tips on search poles.
 - Water is delivered by a passive, gravity-fed sanitary drip only, with no pump and no pressurised water to the survivor. The constructable design keeps this: bottle, capillary, clamp and bite valve.
 - VoidScope does not adopt the proposed tethered crawler block (VDS-DDR-001, D10), so the RedZone US8024066B2 tether odometry question does not arise; the depth marks are printed on the rod.
 

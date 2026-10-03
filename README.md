@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/voidscope/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/voidscope/actions/workflows/reuse.yml)
 
-**Area:** Situational field hardware · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** about $2,000 USD (estimated cost $1,578 USD) · **Difficulty:** 3 of 5
+**Area:** Situational field hardware · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** about $2,000 USD (estimated cost $1,780 USD) · **Difficulty:** 3 of 5
 
 Searches rubble voids with a camera probe that also delivers water and air to a trapped survivor.
 
@@ -14,7 +14,7 @@ Searches rubble voids with a camera probe that also delivers water and air to a 
 
 Most people pulled alive from collapsed buildings are found by local responders in the first day, with little equipment. A camera probe lets a crew look into a void through a small hole instead of opening it blind, and the same probe can then carry water and fresh air to the person it finds. One tool does both jobs, so a crew that has located a survivor does not have to break a second path in to supply them.
 
-Keeping the design open and buildable from commodity parts matters because commercial search cameras sit in the tens of thousands of dollars. VoidScope is a documented push probe built from a bought sealed camera head, aluminium tube and turned aluminium parts, with the rod itself as the air duct and a single-use food-grade water line inside it. Its value-engineering target is $2,000 USD and the constructable design is estimated at $1,578 USD, so that municipal and volunteer teams can build, repair and train with it.
+Keeping the design open and buildable from commodity parts matters because commercial search cameras sit in the tens of thousands of dollars. VoidScope is a documented push probe built from a bought sealed camera head, aluminium tube and turned aluminium parts, with the rod itself as the air duct and a single-use food-grade water line inside it. Its value-engineering target is $2,000 USD and the constructable design is estimated at $1,780 USD, so that municipal and volunteer teams can build, repair and train with it.
 
 ## Burning platform
 
@@ -55,7 +55,7 @@ Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 ## Concept
 
-A 4.4 m push probe, 48 mm across at its widest, that passes a standard 51 mm core hole. Four aluminium sections click together with snap buttons and stay threaded on the camera cable and a water guide tube, like the cord in a tent pole. A sealed 1080p camera with its own lights, a small speaker for two-way talk and a bite valve sit in the turned aluminium head. A battery blower in the surface unit pushes filtered air down the rod's bore and out of six holes at the head, never above 0.9 kPa even when the tip is blocked; a gravity drip from a bottle on a stand reaches the bite valve through a capillary that caps the flow at 4.5 mL/min. The monitor and recorder sit in the lid of the surface unit.
+A 4.5 m push probe, 48 mm across at its widest, that passes a standard 51 mm core hole; its camera tip bends up to 90° either way from a thumb lever to look around a bend. Four aluminium sections click together with snap buttons and stay threaded on the camera cable and a water guide tube, like the cord in a tent pole. A sealed 1080p camera with its own lights sits in the steerable tip; a small speaker for two-way talk and a bite valve sit in the turned aluminium head. A battery blower in the surface unit pushes filtered air down the rod's bore and out of six holes at the head, never above 0.9 kPa even when the tip is blocked; a gravity drip from a bottle on a stand reaches the bite valve through a capillary that caps the flow at 4.5 mL/min. The monitor and recorder sit in the lid of the surface unit.
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [docs/03-requirements.md](docs/03-requirements.md)
 
@@ -71,7 +71,7 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [d
 
 ## Building the prototype
 
-The design is constructable: every part can be cut, drilled, turned or bought, and every joint has a fixing, checked by 106 model checks. The [prototype build plan](docs/05-build-plan.md) takes a maker through nine made components and fifteen assembly steps, each with a picture, and lists the first checks and the safety stops. It is a plan, not yet built; building and testing to it is TRL 4 work. Decisions live in the [design decisions register](docs/06-design-decisions.md).
+The design is constructable: every part can be cut, drilled, turned or bought, and every joint has a fixing, checked by 180 model checks. The [prototype build plan](docs/05-build-plan.md) takes a maker through fourteen made components and seventeen assembly steps, each with a picture, and lists the first checks and the safety stops. It is a plan, not yet built; building and testing to it is TRL 4 work. Decisions live in the [design decisions register](docs/06-design-decisions.md).
 
 ![VoidScope prototype: every component, pulled apart](docs/05-build-plan/overview.png)
 

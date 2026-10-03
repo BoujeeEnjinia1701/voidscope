@@ -60,20 +60,45 @@ PARAMS = {
     #   and its z offset (on the camera axis); button spotface dia and depth below the OD
     "collar": (48.0, 98.0, 60.0, 30.0), "spigot": (40.0, 12.0), "spigot_bore": (14.0, -6.5),
     "spotface": (14.0, 3.7),
-    #   air outlets: hole dia, x from the collar back face, angles (deg from +Y toward +Z)
-    "outlets": (5.0, 79.0, (0.0, 45.0, 135.0, 225.0, 270.0, 315.0)),
+    #   air outlets: hole dia, x from the collar back face, angles (deg from +Y toward +Z); the two lower
+    #   side outlets sit at 240 and 300 deg so the steering housings (215 and 325 deg) pass them (VDS-DDR-003)
+    "outlets": (5.0, 79.0, (0.0, 45.0, 135.0, 240.0, 270.0, 300.0)),
     # 4 speaker: dia, thickness, cover thickness; pocket dia; x of centre from the collar back face; floor |y|
     "speaker": (20.0, 4.0, 0.5), "spk_pocket": 20.5, "spk_x": 79.0, "spk_floor": 16.8,
     #   water exit: hole dia, x where its axis crosses z = 12 (from the collar back face), slope 45 deg
     "wexit": (4.5, 72.0), "groove": (4.5, 20.0),     # groove width and floor height (z) on top
-    # 2 nose: length, counterbore dia (on the spigot), camera bore dia, camera axis z, lip bore, lip length
-    "nose": (75.0, 40.2, 29.3, -6.5, 26.0, 3.0),
+    # 2 nose: length, counterbore dia (on the spigot), bore dia (through, on the camera axis), camera axis z
+    #   (the camera now sits in the steerable tip; the old front lip is gone, VDS-DDR-003)
+    "nose": (75.0, 40.2, 29.3, -6.5),
+    # 30 to 34 steerable camera tip (VDS-DDR-003, Amish 2026-10-03, decision 3A), all on the camera axis:
+    #   link OD, bore, body length, gap between bodies (the gap closes at 18 deg a joint); number of joints
+    "link": (33.0, 23.0, 10.0, 5.25), "n_joint": 5,
+    #   hinge lugs at top and bottom: width, split radius (outer lugs above it, inner lugs below), radial and
+    #   end clearance; hinge pin dia
+    "lug": (8.0, 14.0, 0.1, 0.4), "tpin": 2.0,
+    #   steering wires in the links: distance from the camera axis (on +/-Y), hole dia, wire dia
+    "swire": (14.0, 1.2, 0.6),
+    #   31 base link: spigot OD (in the nose bore) and length, flange length, bore; M3 grub screws x back from the nose front
+    "base": (29.25, 14.0, 8.0, 12.0), "base_screw": (3.0, 7.0),
+    #   32 tip housing: back wall length (23 mm bore), camera bore depth, window recess ahead of the camera;
+    #   anchor cross-hole dia and x from the back face; M3 grub screws: x from the camera's back, angles
+    "tiph": (8.0, 58.0, 3.0), "anchor": (3.0, 4.0), "grub": (3.0, 20.0, (60.0, 120.0)),
+    #   sheath over the bending section: wall
+    "sheath": 0.6,
+    #   33 steering housings in the rod: OD, |y| and z of centre (at 215 and 325 deg); stop counterbore dia
+    #   and depth in the collar front wall; hole dia in section 4 and the control body
+    "housing": (3.0, 10.5, -7.5), "hstop": (3.2, 2.0), "hhole": (4.0, 3.2),
+    #   34 steering control on section 4 ahead of the grip: x of the drum centre; clamp collar outer radius and
+    #   length; pad height above the axis; cheek inner |y|, thickness, height above the pad; drum radius (groove
+    #   root), half width and centre height above the axis; shaft dia; lever length, width, thickness
+    "ctrl": (375.0, 25.0, 64.0, 30.0), "cheek": (14.0, 3.0, 40.0), "drum": (18.0, 13.5, 50.0), "shaft": 6.0,
+    "lever": (50.0, 12.0, 3.0),
     #   bite valve pocket: width, floor z, length back from the nose front
     "pocket": (11.5, 12.0, 50.0),
     #   M4 screws nose to spigot: x from the nose back face, angles
     "nose_screws": (6.0, (30.0, 150.0, 270.0)),
     # 1 camera head (bought, IP68): dia, length; rubber spacer ring length
-    "camera": (29.0, 55.0), "cam_ring": 5.0,
+    "camera": (29.0, 55.0),
     # 11 bite valve: OD, length
     "bite": (11.0, 40.0),
     # 14 surface unit case (bought): outside L (X) x W (Y), base height, lid height, wall; position of
@@ -124,6 +149,11 @@ BOM = {  # model key: (BOM line, name)
     "flowmeter": (20, "Air flow meter"),
     "modules": (21, "Control modules"),
     "fittings": (23, "Wall fittings"),
+    "links": (30, "Bending section: links, pins, sheath"),
+    "base": (31, "Base link"),
+    "tiph": (32, "Tip housing"),
+    "steer": (33, "Steering wires and housings"),
+    "ctrl": (34, "Steering control"),
 }
 
 
@@ -197,17 +227,29 @@ def derived(p=PARAMS):
     cl = p["collar"][1]
     x_nose = x_collar + cl
     nose_len = p["nose"][0]
-    x_tip = x_nose + nose_len
+    x_nf = x_nose + nose_len                       # nose front face
+    lod, lid_, lb, lg = p["link"]
+    nj = p["n_joint"]
+    x_b1 = x_nf + p["base"][2]                     # base link flange front face
+    gaps = [x_b1 + j * (lg + lb) for j in range(nj)]   # back edge of each joint gap, joint 1 first
+    links = [(g + lg, g + lg + lb) for g in gaps[:-1]]  # link bodies 1 to nj - 1
+    x_th0 = gaps[-1] + lg                          # tip housing back face
+    bw, cdep, rec = p["tiph"]
+    x_tip = x_th0 + bw + cdep
     gstart = p["grip"][2]
     gend = gstart + p["grip"][1]
     cod, cw, clen, cbond = p["coupler"]
+    xd, cro, cl_, cpad = p["ctrl"]
     return {
         "rod_id": od - 2 * wall, "coupler_id": cod - 2 * cw, "fit_coupler": (od - 2 * wall - cod) / 2,
-        "sections": sec, "x_collar": x_collar, "x_nose": x_nose, "x_tip": x_tip,
+        "sections": sec, "x_collar": x_collar, "x_nose": x_nose, "x_nf": x_nf, "x_tip": x_tip,
+        "x_b1": x_b1, "gaps": gaps, "pivots": [g + lg / 2 for g in gaps], "links": links, "x_th0": x_th0,
         "x_spigot_end": x_nose + p["spigot"][1], "length": x_tip, "grip_end": gend,
-        "working_length": x_tip - gend, "head_len": x_tip - x_collar,
+        "ctrl_x": (xd - cl_ / 2, xd + cl_ / 2), "x_hA": xd - p["drum"][0], "x_hB": xd + p["drum"][0],
+        "working_length": x_tip - (xd + cl_ / 2), "working_from_grip": x_tip - gend,
+        "head_len": x_tip - x_collar, "tip_len": x_tip - x_nf, "bend_len": x_th0 - x_b1,
         "max_od": max(p["collar"][0], p["grip"][0], od + 2 * p["button"][2]),
-        "cam_x0": x_nose + p["spigot"][1] + p["cam_ring"], "cam_x1": x_nose + p["spigot"][1] + p["cam_ring"] + p["camera"][1],
+        "cam_x0": x_th0 + bw, "cam_x1": x_th0 + bw + p["camera"][1],
         "plenum": (x_collar + p["collar"][2], x_collar + cl),
         "case_x": (p["case_at"][0], p["case_at"][0] + p["case"][0]),
         "case_y": (p["case_at"][1], p["case_at"][1] + p["case"][1]),
@@ -227,9 +269,12 @@ def _section(i, p, D):
     pd, px = p["pin"]
     if i > 0:            # back end receives the next section's coupler: button hole on +Y
         t = t - radial(x0 + bd, 0.0, 0, od / 2 + 2, hole, zc)
-    else:                # section 4: tail cap pins at +/-Z
+    else:                # section 4: tail cap pins at +/-Z; two holes on top where the steering housings leave
         for a in (90.0, 270.0):
             t = t - radial(x0 + p["tc_pin_x"], a, 0, od / 2 + 2, pd / 2, zc)
+        hy = p["housing"][1]
+        for xh, s in ((D["x_hA"], 1), (D["x_hB"], -1)):
+            t = t - zcyl(xh, s * hy, zc, zc + od / 2 + 2, p["hhole"][0] / 2)
     for a in (90.0, 270.0):  # coupler pins at the front end
         t = t - radial(x1 - px, a, 0, od / 2 + 2, pd / 2, zc)
     return t
@@ -339,19 +384,28 @@ def _collar(p, D):
     nsx, nangs = p["nose_screws"]
     for a in nangs:
         c = c - radial(D["x_nose"] + nsx, a, so / 2 - 6, so / 2 + 1, 1.65, zc)
+    # steering: housing stop counterbores in the plenum side of the front wall, wire holes on through the spigot
+    hod, hy, hz = p["housing"]
+    cbd, cbdep = p["hstop"]
+    xw = x0 + cl - 4
+    for s in (1, -1):
+        c = c - xcyl(xw - 1, xw + cbdep, cbd / 2, s * hy, zc + hz)
+        c = c - xcyl(xw, D["x_spigot_end"] + 1, p["swire"][1] / 2, s * hy, zc + hz)
     return c
 
 
 def _nose(p, D):
-    L, cb, camd, camz, lipd, lipl = p["nose"]
+    L, cb, camd, camz = p["nose"]
     od = p["collar"][0]
     x0 = D["x_nose"]
     zc = p["z_axis"]
     sl = p["spigot"][1]
     n = xcyl(x0, x0 + L, od / 2, 0, zc)
     n = n - xcyl(x0 - 1, x0 + sl, cb / 2, 0, zc)
-    n = n - xcyl(x0 + sl - 0.01, x0 + L - lipl, camd / 2, 0, zc + camz)
-    n = n - xcyl(x0 + L - lipl - 1, x0 + L + 1, lipd / 2, 0, zc + camz)
+    n = n - xcyl(x0 + sl - 0.01, x0 + L + 1, camd / 2, 0, zc + camz)      # bore right through to the front
+    sd, sx = p["base_screw"]
+    for a in (0.0, 180.0):                                                # M3 tapped holes for the base link screws
+        n = n - radial(x0 + L - sx, a, camd / 2 - 1, od / 2 + 2, sd / 2 * 0.83, zc + camz)
     pw, pz, plen = p["pocket"]
     n = n - bx(x0 + L - plen, x0 + L + 1, -pw / 2, pw / 2, zc + pz, zc + od)
     gw, gz = p["groove"]
@@ -374,12 +428,6 @@ def _camera(p, D):
     cd, cl = p["camera"]
     zc = p["z_axis"] + p["nose"][3]
     return xcyl(D["cam_x0"], D["cam_x1"], cd / 2, 0, zc)
-
-
-def _cam_ring(p, D):
-    cd = p["camera"][0]
-    zc = p["z_axis"] + p["nose"][3]
-    return xtube(D["x_spigot_end"], D["cam_x0"], cd / 2, p["cable"][1] / 2, 0, zc)
 
 
 def _spigot_grommet(p, D):
@@ -424,7 +472,7 @@ def _lines(p, D):
     zt = gfz + wod / 2                      # tube centre in the groove
     xe0 = x0c + wx + (gz - 12.0)            # where the exit axis crosses the guide line (z = gz)
     xe1 = x0c + wx + (zt - 12.0)            # where it reaches the groove line
-    xb = D["x_tip"] - p["bite"][1] - 2.0
+    xb = D["x_nf"] - p["bite"][1] - 2.0
     zb = p["pocket"][1] + p["bite"][0] / 2
     b = _b3d()
     w = fuse([xcyl(st, xe0, wod / 2, 0, zc + gz),
@@ -436,6 +484,238 @@ def _lines(p, D):
     w = w - xcyl(st - 1, xe0 - 0.5, wid / 2, 0, zc + gz)
     bite = xcyl(xb, xb + p["bite"][1], p["bite"][0] / 2, 0, zc + zb)
     return cable, guide, w, bite
+
+
+# ------------------------------------------------------------------ steerable camera tip (VDS-DDR-003)
+def ycyl(x, z, y0, y1, r):
+    b = _b3d()
+    return b.Pos(x, (y0 + y1) / 2, z) * b.Rot(90, 0, 0) * b.Cylinder(r, y1 - y0)
+
+
+def _camz(p):
+    return p["z_axis"] + p["nose"][3]
+
+
+def _lug_box(p, x0, x1):
+    w = p["lug"][0]
+    zc = _camz(p)
+    R = p["link"][0] / 2
+    return bx(x0, x1, -w / 2, w / 2, zc - R - 1, zc + R + 1)
+
+
+def _lug_plan(p, g, front):
+    """Plan shape of a lug: full width on the side of its own link, rounded about the pin on the free side
+    (radius half the gap less the end clearance), so the neighbouring link face clears it at any bend."""
+    lod, lid_, lb, lg = p["link"]
+    w, split, rc, ec = p["lug"]
+    zc = _camz(p)
+    R = lod / 2
+    xp = g + lg / 2
+    xa, xb_ = (g, xp) if front else (xp, g + lg)
+    return _lug_box(p, xa, xb_) + zcyl(xp, 0, zc - R - 1, zc + R + 1, lg / 2 - ec)
+
+
+def _outer_lugs(p, g):
+    """Lugs on the front of the part behind joint gap g: the outer half of the wall, top and bottom."""
+    lod, lid_, lb, lg = p["link"]
+    w, split, rc, ec = p["lug"]
+    return xtube(g, g + lg - ec, lod / 2, split + rc, 0, _camz(p)) & _lug_plan(p, g, True)
+
+
+def _inner_lugs(p, g):
+    """Lugs on the back of the part ahead of joint gap g: the inner half of the wall, top and bottom."""
+    lod, lid_, lb, lg = p["link"]
+    w, split, rc, ec = p["lug"]
+    return xtube(g + ec, g + lg, split - rc, lid_ / 2, 0, _camz(p)) & _lug_plan(p, g, False)
+
+
+def _pin_holes(p, D, shape, joints):
+    zc = _camz(p)
+    R = p["link"][0] / 2
+    for j in joints:
+        shape = shape - zcyl(D["pivots"][j], 0, zc - R - 1, zc + R + 1, p["tpin"] / 2)
+    return shape
+
+
+def _wire_holes(p, shape, x0, x1):
+    zc = _camz(p)
+    yw, hd, wd = p["swire"]
+    for s in (1, -1):
+        shape = shape - xcyl(x0, x1, hd / 2, s * yw, zc)
+    return shape
+
+
+def _base_wire_line(p, D, s):
+    """Straight drilled line of the wire hole in the base link: from the housing line at its back face to
+    the link wire position at its flange front."""
+    hod, hy, hz = p["housing"]
+    zc = p["z_axis"]
+    a = (D["x_nf"] - p["base"][1], s * hy, zc + hz)
+    b_ = (D["x_b1"], s * p["swire"][0], _camz(p))
+    return a, b_
+
+
+def _ext(a, b_, e):
+    d = [b_[k] - a[k] for k in range(3)]
+    n = math.sqrt(sum(v * v for v in d))
+    u = [v / n for v in d]
+    return tuple(a[k] - u[k] * e for k in range(3)), tuple(b_[k] + u[k] * e for k in range(3))
+
+
+def _base(p, D):
+    so, sl, fl, bore = p["base"]
+    lod = p["link"][0]
+    zc = _camz(p)
+    xn = D["x_nf"]
+    s = xcyl(xn - sl, xn, so / 2, 0, zc) + xcyl(xn, D["x_b1"], lod / 2, 0, zc) + _outer_lugs(p, D["gaps"][0])
+    s = s - xcyl(xn - sl - 1, D["x_b1"] + 1, bore / 2, 0, zc)
+    s = _pin_holes(p, D, s, [0])
+    for sgn in (1, -1):
+        a, b_ = _ext(*_base_wire_line(p, D, sgn), 1.5)
+        s = s - rod_between(a, b_, p["swire"][1] / 2)
+    sd, sx = p["base_screw"]
+    for a in (0.0, 180.0):      # 1.5 mm deep dimples for the grub screw points
+        s = s - radial(xn - sx, a, so / 2 - 1.5, so / 2 + 1, sd / 2 * 0.83, zc)
+    return s
+
+
+def _base_screws(p, D):
+    so = p["base"][0]
+    sd, sx = p["base_screw"]
+    zc = _camz(p)
+    od = p["collar"][0]
+    # grub screws stop 1 mm under the nose surface: from the dimple floor outward 9 mm
+    return fuse(radial(D["x_nf"] - sx, a, so / 2 - 1.5, so / 2 + 7.5, sd / 2 * 0.83, zc) for a in (0.0, 180.0))
+
+
+def _link(p, D, i):
+    """Bending link i (1 to n_joint - 1): body, inner lugs at the back (joint i), outer lugs at the front (joint i + 1)."""
+    lod, lid_, lb, lg = p["link"]
+    zc = _camz(p)
+    x0, x1 = D["links"][i - 1]
+    s = xtube(x0, x1, lod / 2, lid_ / 2, 0, zc) + _inner_lugs(p, D["gaps"][i - 1]) + _outer_lugs(p, D["gaps"][i])
+    s = _pin_holes(p, D, s, [i - 1, i])
+    return _wire_holes(p, s, x0 - 1, x1 + 1)
+
+
+def _tip_pins(p, D):
+    lod, lid_ = p["link"][:2]
+    zc = _camz(p)
+    out = []
+    for x in D["pivots"]:
+        for sg in (1, -1):
+            z0, z1 = sorted((zc + sg * lid_ / 2, zc + sg * lod / 2))
+            out.append(zcyl(x, 0, z0, z1, p["tpin"] / 2))
+    return fuse(out)
+
+
+def _tip_housing(p, D):
+    lod, lid_ = p["link"][:2]
+    bw, cdep, rec = p["tiph"]
+    zc = _camz(p)
+    x0 = D["x_th0"]
+    s = (xtube(x0, x0 + bw, lod / 2, lid_ / 2, 0, zc) + xtube(x0 + bw, D["x_tip"], lod / 2, p["camera"][0] / 2 + 0.15, 0, zc)
+         + _inner_lugs(p, D["gaps"][-1]))
+    s = _pin_holes(p, D, s, [p["n_joint"] - 1])
+    ad, ax = p["anchor"]
+    s = _wire_holes(p, s, x0 - 1, x0 + ax)
+    for a in (0.0, 180.0):
+        s = s - radial(x0 + ax, a, p["swire"][0] - 1.5, lod / 2 + 1, ad / 2, zc)
+    gd, gx, gangs = p["grub"]
+    for a in gangs:
+        s = s - radial(D["cam_x0"] + gx, a, p["camera"][0] / 2 - 1, lod / 2 + 1, gd / 2 * 0.83, zc)
+    return s
+
+
+def _grubs(p, D):
+    gd, gx, gangs = p["grub"]
+    zc = _camz(p)
+    return fuse(radial(D["cam_x0"] + gx, a, p["camera"][0] / 2, p["link"][0] / 2 - 0.5, gd / 2 * 0.83, zc) for a in gangs)
+
+
+def _sheath(p, D):
+    R = p["link"][0] / 2
+    return xtube(D["x_nf"] + 0.5, D["x_th0"] + 6.0, R + p["sheath"], R, 0, _camz(p))
+
+
+def _wires(p, D):
+    """The two steering wires from their housing stops in the collar to the anchors in the tip housing."""
+    hod, hy, hz = p["housing"]
+    zc = p["z_axis"]
+    xw = D["x_collar"] + p["collar"][1] - 4 + p["hstop"][1]
+    r = p["swire"][2] / 2
+    out = []
+    for s in (1, -1):
+        a, b_ = _base_wire_line(p, D, s)
+        pts = [(xw, s * hy, zc + hz), a, b_, (D["x_th0"] + p["anchor"][1], s * p["swire"][0], _camz(p))]
+        w = None
+        for q0, q1 in zip(pts[:-1], pts[1:]):
+            seg = rod_between(q0, q1, r)
+            w = seg if w is None else w + seg
+        for q in pts[1:-1]:
+            w = w + _b3d().Pos(*q) * _b3d().Sphere(r)
+        out.append(w)
+    return fuse(out)
+
+
+def _housings(p, D):
+    """Two steering housings: from the stops in the steering control body, down through section 4's top wall,
+    then along the rod bore to the stops in the collar front wall. A (on +Y) turns down at the back of the drum,
+    B (on -Y) at its front."""
+    hod, hy, hz = p["housing"]
+    zc = p["z_axis"]
+    xw = D["x_collar"] + p["collar"][1] - 4 + p["hstop"][1]
+    ztop = zc + p["ctrl"][3] - 2.0
+    out = []
+    for xh, s in ((D["x_hA"], 1), (D["x_hB"], -1)):
+        y = s * hy
+        h = xcyl(xh, xw, hod / 2, y, zc + hz) + zcyl(xh, y, zc + hz, ztop, hod / 2) + _b3d().Pos(xh, y, zc + hz) * _b3d().Sphere(hod / 2)
+        out.append(h)
+    return fuse(out)
+
+
+def _ctrl_body(p, D):
+    """Steering control body, printed in one piece: split clamp collar on section 4, pad and two cheeks."""
+    xd, cro, cl_, cpad = p["ctrl"]
+    ci, ct, ch = p["cheek"]
+    zc = p["z_axis"]
+    rr = p["rod"][0] / 2
+    x0, x1 = D["ctrl_x"]
+    body = xcyl(x0, x1, cro, 0, zc) + bx(x0, x1, -(ci + ct), ci + ct, zc, zc + cpad)
+    for s in (1, -1):
+        y0, y1 = sorted((s * ci, s * (ci + ct)))
+        body = body + bx(xd - 25, xd + 25, y0, y1, zc + cpad, zc + cpad + ch)
+        body = body + bx(xd - 10, xd + 10, *sorted((s * 1.0, s * 7.0)), zc - cro - 8, zc - cro + 3)
+    body = body - xcyl(x0 - 1, x1 + 1, rr, 0, zc)
+    body = body - bx(x0 - 1, x1 + 1, -1.0, 1.0, zc - cro - 10, zc - rr + 0.5)          # split along the bottom
+    body = body - ycyl(xd, zc - cro - 3, -8, 8, 2.1)                                   # M4 clamp screw
+    hod, hy, hz = p["housing"]
+    hcb, hhole = p["hhole"][1], p["swire"][1]
+    for xh, s in ((D["x_hA"], 1), (D["x_hB"], -1)):
+        body = body - zcyl(xh, s * hy, zc + 5.0, zc + cpad - 2.0, hcb / 2)          # housing passes and stops here
+        body = body - zcyl(xh, s * hy, zc + cpad - 3.0, zc + cpad + 1, hhole / 2)      # wire on up to the drum
+    dr, dw, dz = p["drum"]
+    body = body - ycyl(xd, zc + dz, -(ci + ct + 1), ci + ct + 1, p["shaft"] / 2 + 0.1)
+    return body
+
+
+def _ctrl_parts(p, D):
+    xd, cro, cl_, cpad = p["ctrl"]
+    ci, ct, ch = p["cheek"]
+    dr, dw, dz = p["drum"]
+    ll, lw, lt = p["lever"]
+    zc = p["z_axis"]
+    zs = zc + dz
+    sh = p["shaft"] / 2
+    drum = ycyl(xd, zs, -dw, dw, dr) - ycyl(xd, zs, -dw - 1, dw + 1, sh)
+    shaft = ycyl(xd, zs, -(ci + ct + 6), ci + ct + 0.5 + lt, sh)
+    y0 = ci + ct + 0.5
+    lever = bx(xd - lw / 2, xd + lw / 2, y0, y0 + lt, zs - 9, zs + ll) + ycyl(xd, zs + ll, y0, y0 + lt, 9.0)
+    lever = lever - ycyl(xd, zs, y0 - 1, y0 + lt + 1, sh)
+    lever = lever + ycyl(xd, zs + ll, y0 + lt, y0 + lt + 8, 6.0)                       # thumb peg
+    knob = ycyl(xd, zs, -(ci + ct + 10), -(ci + ct), 9.0) - ycyl(xd, zs, -(ci + ct + 6) - 0.01, -(ci + ct) + 1, sh)
+    screw = ycyl(xd, zc - cro - 3, -9, 9, 2.0)
+    return drum, shaft, lever, knob, screw
 
 
 # ------------------------------------------------------------------ surface unit
@@ -605,11 +885,28 @@ def build_components(p=PARAMS):
     add("nose", "Nose", _nose(p, D), 2, "made", "nose")
     add("nose_screws", "Nose screws (3)", _nose_screws(p, D), 2, "fixing", "nose")
     add("camera", "Camera head", _camera(p, D), 1, "bought", "camera")
-    add("cam_ring", "Camera spacer ring", _cam_ring(p, D), 1, "bought", "camera")
     add("spg_grommet", "Spigot grommet", _spigot_grommet(p, D), 3, "bought", "collar")
     spk, cov = _speaker(p, D)
     add("speaker", "Speaker", spk, 4, "bought", "speaker")
     add("spk_cover", "Speaker cover", cov, 4, "made", "speaker")
+    # steerable camera tip and its control (VDS-DDR-003)
+    add("base", "Base link", _base(p, D), 31, "made", "base")
+    add("base_screws", "Base link grub screws (2)", _base_screws(p, D), 31, "fixing", "base")
+    for i in range(1, p["n_joint"]):
+        add(f"link{i}", f"Bending link {i}", _link(p, D, i), 30, "made", "links")
+    add("tpins", "Hinge pins (10)", _tip_pins(p, D), 30, "fixing", "links")
+    add("sheath", "Bending section sheath", _sheath(p, D), 30, "bought", "links")
+    add("tiph", "Tip housing", _tip_housing(p, D), 32, "made", "tiph")
+    add("grubs", "Camera grub screws (2)", _grubs(p, D), 32, "fixing", "tiph")
+    add("swires", "Steering wires (2)", _wires(p, D), 33, "bought", "steer")
+    add("housings", "Steering housings (2)", _housings(p, D), 33, "bought", "steer")
+    add("ctrl_body", "Steering control body", _ctrl_body(p, D), 34, "made", "ctrl")
+    drum, shaft, lever, knob, cscrew = _ctrl_parts(p, D)
+    add("drum", "Steering drum", drum, 34, "made", "ctrl")
+    add("shaft", "Drum shaft", shaft, 34, "bought", "ctrl")
+    add("lever", "Steering lever", lever, 34, "made", "ctrl")
+    add("knob", "Friction lock knob", knob, 34, "bought", "ctrl")
+    add("ctrl_screw", "Clamp screw", cscrew, 34, "fixing", "ctrl")
     # surface unit
     base, lid = _case(p, D)
     add("case", "Case base, drilled", base, 14, "bought", "case")
@@ -635,6 +932,44 @@ def build_components(p=PARAMS):
     return C
 
 
+def bent_tip(p=PARAMS, angle=45.0, C=None):
+    """The steerable tip bent by angle (deg, + toward +Y, - toward -Y), shared equally by the joints.
+    Returns {key: shape} for the parts ahead of the base link (links, pins, tip housing, grub screws,
+    camera) and a sheath made of short sleeves, one per link. For calculations, drawings and renders."""
+    b = _b3d()
+    C = C or build_components(p)
+    D = derived(p)
+    nj = p["n_joint"]
+    phi = angle / nj
+    zc = _camz(p)
+
+    def pose(shape, k):
+        """Rotate a part that lies beyond joint k (1-based count of joints behind it)."""
+        for j in reversed(range(k)):
+            x = D["pivots"][j]
+            shape = b.Pos(x, 0, zc) * b.Rot(0, 0, phi) * b.Pos(-x, 0, -zc) * shape
+        return shape
+
+    out = {}
+    for i in range(1, nj):
+        out[f"link{i}"] = pose(C[f"link{i}"].shape, i)
+    for k in ("tiph", "grubs", "camera"):
+        out[k] = pose(C[k].shape, nj)
+    pins = []
+    for j in range(nj):
+        pj = C["tpins"].shape & bx(D["pivots"][j] - 2, D["pivots"][j] + 2, -5, 5, zc - 25, zc + 25)
+        pins.append(pose(pj, j))
+    out["tpins"] = fuse(pins)
+    R = p["link"][0] / 2
+    t = p["sheath"]
+    sl = [xtube(D["x_nf"] + 0.5, D["gaps"][0] + p["link"][3] / 2, R + t, R, 0, zc)]
+    for i in range(1, nj):
+        sl.append(pose(xtube(D["pivots"][i - 1] - 1.0, D["pivots"][i] + 1.0, R + t, R, 0, zc), i))
+    sl.append(pose(xtube(D["pivots"][-1] - 1.0, D["x_th0"] + 6.0, R + t, R, 0, zc), nj))
+    out["sheath"] = fuse(sl)
+    return out
+
+
 PROBE_KEYS = None  # filled by probe_keys()
 
 
@@ -644,7 +979,9 @@ def probe_keys(C):
     return [k for k in C if k not in surf]
 
 
-HEAD_KEYS = ["collar", "nose", "nose_screws", "camera", "cam_ring", "spg_grommet", "speaker", "spk_cover", "bite"]
+TIP_KEYS = ["base", "base_screws", "link1", "link2", "link3", "link4", "tpins", "sheath", "tiph", "grubs", "camera"]
+HEAD_KEYS = ["collar", "nose", "nose_screws", "spg_grommet", "speaker", "spk_cover", "bite", "swires"] + TIP_KEYS
+CTRL_KEYS = ["ctrl_body", "drum", "shaft", "lever", "knob", "ctrl_screw"]
 SURFACE_KEYS = ["case", "lid", "eplate", "espacers", "battery", "blower", "blower_legs", "modules", "flowmeter",
                 "fm_bracket", "fittings", "filter", "monitor", "dbracket"]
 
@@ -660,13 +997,15 @@ def build_parts(p=PARAMS, C=None):
            "couplers": "#0F766E", "tailcap": "#4B5563", "grip": "#111827", "cable": "#B45309", "guide": "#E5E7EB",
            "waterset": "#2563EB", "bottle": "#93C5FD", "stand": "#374151", "case": "#F59E0B", "eplate": "#A8A29E",
            "display": "#1E293B", "battery": "#C2410C", "blower": "#334155", "filter": "#E5E7EB", "flowmeter": "#0EA5E9",
-           "modules": "#16A34A", "fittings": "#111827"}
+           "modules": "#16A34A", "fittings": "#111827", "links": "#374151", "base": "#9CA3AF", "tiph": "#6B7280",
+           "steer": "#7C3AED", "ctrl": "#0F766E"}
     ex = {"camera": (260, 0, 120), "nose": (220, 0, 60), "collar": (120, 0, 60), "speaker": (120, -160, 60),
           "rods": (0, 0, 220), "couplers": (0, 0, 120), "tailcap": (-260, 0, 60), "grip": (0, 0, 320),
           "cable": (0, 0, -120), "guide": (0, 0, -200), "waterset": (360, 0, 200), "bottle": (200, 0, 300),
           "stand": (300, 0, 0), "case": (0, 0, 0), "eplate": (0, 0, 220), "display": (0, 0, 520), "battery": (0, 0, 380),
           "blower": (0, 0, 420), "filter": (0, -200, 0), "flowmeter": (160, 0, 400), "modules": (0, 0, 460),
-          "fittings": (0, 180, 0)}
+          "fittings": (0, 180, 0), "links": (360, 0, 60), "base": (300, 0, 60), "tiph": (420, 0, 60),
+          "steer": (0, 0, -280), "ctrl": (0, 0, 200)}
     out = []
     for key, (line, name) in sorted(BOM.items(), key=lambda kv: kv[1][0]):
         if key in groups:
@@ -743,20 +1082,71 @@ def checks(p=PARAMS, C=None):
     chk("Bite valve in the nose pocket", S("bite"), S("nose"), ("fit", 0.3))
     chk("Nose on the collar spigot and shoulder", S("nose"), S("collar"), "touch")
     chk("Nose screws into the spigot", S("nose_screws"), S("collar"), "touch")
-    chk("Camera head in the nose bore, against the lip", S("camera"), S("nose"), "touch")
-    chk("Spacer ring between camera and spigot", S("cam_ring"), S("camera", "collar"), "touch")
     chk("Spigot grommet in the spigot bore", S("spg_grommet"), S("collar"), "touch")
-    chk("Cable through the spigot grommet and spacer ring", S("cable"), S("spg_grommet", "cam_ring"), "touch")
+    chk("Cable through the spigot grommet", S("cable"), S("spg_grommet"), "touch")
     chk("Cable clear of the collar plenum and spigot", S("cable"), S("collar"), 1.0)
     chk("Cable meets the camera", S("cable"), S("camera"), "touch")
     chk("Speaker on the pocket floor", S("speaker"), S("collar"), ("fit", 0.3))
     chk("Speaker cover on the speaker", S("spk_cover"), S("speaker"), "touch")
     chk("Speaker clear of the outlets and water exit (cover)", S("spk_cover"), S("collar"), ("fit", 0.3))
+    # steerable tip (VDS-DDR-003)
+    chk("Base link spigot in the nose bore, flange against the nose front", S("base"), S("nose"), "touch")
+    chk("Base link spigot a close fit in the nose bore", S("base"), S("nose"), ("fit", 0.05))
+    chk("Base link grub screws in the nose", S("base_screws"), S("nose"), "touch")
+    chk("Base link grub screws in their dimples", S("base_screws"), S("base"), "touch")
+    P_n = p["n_joint"]
+    chain = ["base"] + [f"link{i}" for i in range(1, P_n)] + ["tiph"]
+    for j in range(P_n):
+        a_, b2 = chain[j], chain[j + 1]
+        chk(f"Joint {j + 1}: {C[a_].name.lower()} lugs clear of {C[b2].name.lower()}", S(a_), S(b2), ("fit", 0.45))
+        pins_j = C["tpins"].shape & bx(D["pivots"][j] - 2, D["pivots"][j] + 2, -5, 5, p["z_axis"] - 40, p["z_axis"] + 30)
+        chk(f"Joint {j + 1}: hinge pins through both lugs", pins_j, S(a_, b2), "touch")
+    chk("Sheath over the bending section", S("sheath"), S(*chain), "touch")
+    chk("Sheath clear of the nose", S("sheath"), S("nose"), 0.3)
+    chk("Sheath clear of the bite valve", S("sheath"), S("bite"), 1.0)
+    chk("Base link clear of the bite valve", S("base"), S("bite"), 1.0)
+    chk("Camera head in the tip housing, against the step", S("camera"), S("tiph"), "touch")
+    chk("Camera grub screws on the camera", S("grubs"), S("camera"), "touch")
+    chk("Camera grub screws in the tip housing", S("grubs"), S("tiph"), "touch")
+    chk("Cable clear of the base link bore", S("cable"), S("base"), 1.0)
+    chk("Cable clear of the bending links", S("cable"), S(*chain[1:-1]), 1.0)
+    chk("Cable clear of the tip housing back bore", S("cable"), S("tiph"), 1.0)
+    chk("Cable clear of the hinge pins", S("cable"), S("tpins"), 1.0)
+    for k in ["collar", "base"] + chain[1:]:
+        chk(f"Steering wires in their holes in the {C[k].name.lower()}", S("swires"), S(k), ("fit", 0.35))
+    chk("Steering wires clear of the nose bore (inside the base link at the front)", S("swires"), S("nose"), 1.5)
+    chk("Steering wires clear of the cable", S("swires"), S("cable"), 2.0)
+    chk("Steering wires clear of the hinge pins", S("swires"), S("tpins"), 2.0)
+    # steering housings along the rod
+    chk("Steering housings end in their stops in the collar front wall", S("housings"), S("collar"), "touch")
+    chk("Steering wires leave the housings", S("swires"), S("housings"), "touch")
+    for k in range(1, n + 1):
+        chk(f"Housings clear of snap button spring {k}", S("housings"), S(f"spring{k}"), 1.5)
+        chk(f"Housings clear of coupler {k} bore", S("housings"), S(f"coupler{k}"), 0.3)
+        chk(f"Housings clear of pins {k}", S("housings"), S(f"pins{k}"), 1.0)
+    chk("Housings clear of the camera cable", S("housings"), S("cable"), 2.0)
+    chk("Housings clear of the guide tube", S("housings"), S("guide"), 2.0)
+    chk("Housings clear of the water tube", S("housings"), S("wtube"), 2.0)
+    chk("Housings clear of the speaker", S("housings"), S("speaker"), 2.0)
+    chk("Housings through the two holes in section 4", S("housings"), S("rod4"), ("fit", 0.55))
+    chk("Housings clear of the other sections", S("housings"), S("rod1", "rod2", "rod3"), 0.3)
+    # steering control on section 4
+    chk("Steering control clamped on section 4", S("ctrl_body"), S("rod4"), "touch")
+    chk("Steering control clear of the grip", S("ctrl_body"), S("grip"), 3.0)
+    chk("Housings stop in the control body", S("housings"), S("ctrl_body"), "touch")
+    chk("Clamp screw through the clamp lugs", S("ctrl_screw"), S("ctrl_body"), ("fit", 0.15))
+    chk("Drum shaft through the cheeks", S("shaft"), S("ctrl_body"), ("fit", 0.15))
+    chk("Drum on its shaft", S("drum"), S("shaft"), "touch")
+    chk("Drum clear of the cheeks", S("drum"), S("ctrl_body"), ("fit", 0.6))
+    chk("Lever on the shaft", S("lever"), S("shaft"), "touch")
+    chk("Lever clear of the cheek", S("lever"), S("ctrl_body"), 0.3)
+    chk("Friction lock knob on the shaft, against the cheek", S("knob"), S("shaft", "ctrl_body"), "touch")
+    chk("Drum clear of the section 4 tube", S("drum"), S("rod4"), 5.0)
     # head inside the 50 mm envelope (R1): nothing outside a 50 mm cylinder
     outside = xcyl(D["x_collar"] - 1, D["x_tip"] + 1, 60, 0, p["z_axis"]) - xcyl(D["x_collar"] - 2, D["x_tip"] + 2, 24.0 + 0.01, 0, p["z_axis"])
     for k in HEAD_KEYS + ["wtube"]:
         v = _vol(C[k].shape, outside)
-        rows.append((f"{C[k].name} inside the 48 mm head outline", v, 0.0, "inside", v < 1e-3))
+        rows.append((f"{C[k].name} inside the 48 mm head outline (tip straight)", v, 0.0, "inside", v < 1e-3))
     # surface unit
     chk("Plate spacers on the case floor", S("espacers"), S("case"), "touch")
     chk("Equipment plate on its spacers", S("eplate"), S("espacers"), "touch")

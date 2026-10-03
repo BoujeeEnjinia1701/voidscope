@@ -1,4 +1,5 @@
-"""VoidScope general arrangement sheet VDS-DWG-001, Rev P2 (TRL 3; constructable design VDS-DDR-002).
+"""VoidScope general arrangement sheet VDS-DWG-001, Rev P3 (TRL 3; constructable design VDS-DDR-002 with the
+steerable camera tip of VDS-DDR-003).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/VDS-DWG-001.svg, .pdf and .png from the parametric model in cad/src/model.py
@@ -79,10 +80,11 @@ def main():
     views = safe_project_views(asm, work)
     bb = asm.bounding_box()
     s = Sheet(project="VoidScope", title="Rubble void search probe and surface unit: general arrangement",
-              dwg_no="VDS-DWG-001", rev="P2", author="Amish Chadha", date=DATE, scale=1 / 25, theme="technical",
+              dwg_no="VDS-DWG-001", rev="P3", author="Amish Chadha", date=DATE, scale=1 / 25, theme="technical",
               material="6061-T6 aluminium tube and bar; bought parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
-                         ("P2", "VDS-DDR-002: design for construction", DATE, "AC")])
+                         ("P2", "VDS-DDR-002: design for construction", DATE, "AC"),
+                         ("P3", "VDS-DDR-003: steerable camera tip and steering control", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -94,8 +96,9 @@ def main():
     X = lambda mx: x + (mx - bb.min.X) * k   # noqa: E731
     Zf = lambda mz: y + h - (mz - bb.min.Z) * k   # noqa: E731
     s._dim(X(0), Zf(zc), X(D["length"]), Zf(zc), f"{D['length']:,.0f} PROBE", "above", off=34)
-    s._dim(X(D["grip_end"]), Zf(zc), X(D["length"]), Zf(zc), f"{D['working_length']:,.0f} WORKING LENGTH", "below", off=6)
-    L += leader(X(D["x_tip"] - 60), Zf(zc), X(D["x_tip"] - 260), Zf(zc + 260), "HEAD, 48 OD (1 TO 4); SEE DETAIL A", "end")
+    s._dim(X(D["ctrl_x"][1]), Zf(zc), X(D["length"]), Zf(zc), f"{D['working_length']:,.0f} INTO THE VOID", "below", off=6)
+    L += leader(X(D["x_tip"] - 60), Zf(zc), X(D["x_tip"] - 260), Zf(zc + 260), "HEAD AND STEERABLE TIP, 48 OD; SEE DETAIL A", "end")
+    L += leader(X(D["ctrl_x"][0] + 30), Zf(zc + 60), X(-60), Zf(zc + 200), "STEERING CONTROL (34)", "start")
     xs = [X(a) for a, _ in D["sections"]]
     for i, xa in enumerate(xs):
         L.append(_t(xa + 1050 * k / 2, Zf(zc) - 2.5, f"SECTION {4 - i} (5)", 1.9, 400, MUTED, "middle"))
@@ -110,19 +113,21 @@ def main():
     L.append(_t(Xt(2600), Yt(-450), "OPERATOR STANDS BEHIND THE TAIL CAP (-X); TIP POINTS +X", 1.9, 400, MUTED, "middle"))
 
     s._layers += L
-    s.add_svg(views["iso"], 276, 30, 140, 56, label="Isometric view", sublabel="Not to scale")
+    s.add_svg(views["iso"], 276, 37, 140, 50, label="Isometric view", sublabel="Not to scale")
     # Detail A: the head at 1:2
     from build123d import Compound
-    hv = safe_project_views(Compound([C[k_].shape for k_ in HEAD_KEYS]), work / "head", names=("front",))
-    s.add_svg(hv["front"], 276, 102, 140, 30, scale=0.5, label="Detail A: head",
-              sublabel="Scale 1:2; side elevation looking along +Y, tip to the right")
+    hv = safe_project_views(Compound([C[k_].shape for k_ in HEAD_KEYS]), work / "head", names=("top",))
+    s.add_svg(hv["top"], 276, 102, 140, 30, scale=0.4, label="Detail A: head and steerable tip",
+              sublabel="Scale 1:2.5; plan from above, tip to the right, straight; bends 90 deg each way in this plane")
     s.add_notes("Main dimensions and interfaces (mm)", [
         f"Probe {D['length']:,.0f} long; working length {D['working_length']:,.0f}; axis {zc:.0f} above ground as held",
         f"Rod: 4 sections 38.1 x 1.47 6061-T6 tube, {P['rod'][2]:,.0f} long",
         f"Couplers 34.93 x 2.11 x {P['coupler'][2]:.0f}, {P['coupler'][3]:.0f} bonded and pinned; snap button",
-        "Head 48 OD at most; passes a 51 mm core hole (R1)",
+        "Head 48 OD at most, tip straight; passes a 51 mm core hole (R1)",
         "Collar: socket, plenum, 6 x 5 outlets, speaker, water exit",
-        "Nose: 29 mm IP68 camera 6.5 below the axis; bite valve on top",
+        "Nose: base link 6.5 below the axis; bite valve on top",
+        f"Tip: 5 joints, 90 deg each way; {D['tip_len']:.0f} long; 29 mm IP68 camera",
+        "Steering: lever and drum on section 4, two wires in housings",
         "Air: rod bore is the duct; inlet barb on the tail cap",
         "Water: 4 x 2.5 tube inside an 8 x 6 PTFE guide",
         f"Case {P['case'][0]:.0f} x {P['case'][1]:.0f} x {P['case'][2] + P['case'][3]:.0f}; lid opened {P['lid_open']:.0f} deg",

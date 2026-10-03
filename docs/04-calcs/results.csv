@@ -1,26 +1,29 @@
 tag,quantity,value,unit
-A1,"Largest diameter anywhere on the probe (head 48, grip 47, buttons)",48.0,mm
+A1,"Largest diameter anywhere on the probe with the tip straight (head 48, grip 47, buttons)",48.0,mm
 A2,Radial clearance in a 51 mm core hole at the head,1.50,mm
-A3,"Assembled probe length, tail cap to tip",4398,mm
-A4,"Working length, tip to the front of the grip",4063,mm
-A5,"Head length, collar back face to tip",173,mm
-A6,Rigid rod: smallest bend radius it can follow,none (straight only),
+A3,"Assembled probe length, tail cap to tip",4538,mm
+A4,"Working length, tip to the front of the steering control (as far as the probe can go in)",4131,mm
+A4g,Tip to the front of the grip,4203,mm
+A5,"Head length, collar back face to tip",313,mm
+A6,Steerable tip length ahead of the nose,140,mm
 B1,Rod tube second moment of area,28418,mm4
 B2,Rod tube section modulus,1492,mm3
-B3,"Rod line mass (tube, couplers, lines, water)",0.61,kg/m
-B4,"Head mass (collar, nose, camera, speaker, bite valve)",0.67,kg
-B5,"Probe mass, assembled, lines filled",3.66,kg
-B6a,Tip droop with 1 m unsupported beyond the hole,1.50,mm
-B6b,Tip droop with 2 m unsupported beyond the hole,15.1,mm
-B71,Hand force at the grip with 1 m in the void and the tip unsupported (+ pushes down),-7.81,N
-B72,Hand force at the grip with 2 m in the void and the tip unsupported (+ pushes down),3.58,N
-B73,Hand force at the grip with 3 m in the void and the tip unsupported (+ pushes down),33.8,N
-B8,"Bending moment at the hole lip, 3 m in the void, tip unsupported",46.8,N m
-B9,Bending stress in the plain tube at that moment,31.4,MPa
-B10,Stress at a button hole (stress concentration 3),94.2,MPa
-B11,Safety factor on yield at a button hole,2.55,
-B12,"Euler buckling load of the whole rod, pinned at both ends",1001,N
-B13,Buckling factor at a 200 N two-handed push,5.00,
+B3,"Rod line mass (tube, couplers, lines, steering housings, water)",0.65,kg/m
+B4,"Head mass (collar, nose, steerable tip with camera, speaker, bite valve)",0.77,kg
+B4t,"Steerable tip mass ahead of the nose (base link, links, pins, sheath, tip housing, camera)",0.28,kg
+B4s,"Steering housings and wires, and the steering control",0.41,kg
+B5,"Probe mass, assembled, lines filled",4.18,kg
+B6a,Tip droop with 1 m unsupported beyond the hole,1.69,mm
+B6b,Tip droop with 2 m unsupported beyond the hole,16.7,mm
+B71,Hand force at the grip with 1 m in the void and the tip unsupported (+ pushes down),-8.62,N
+B72,Hand force at the grip with 2 m in the void and the tip unsupported (+ pushes down),3.14,N
+B73,Hand force at the grip with 3 m in the void and the tip unsupported (+ pushes down),32.3,N
+B8,"Bending moment at the hole lip, 3 m in the void, tip unsupported",51.2,N m
+B9,Bending stress in the plain tube at that moment,34.3,MPa
+B10,Stress at a button hole (stress concentration 3),103,MPa
+B11,Safety factor on yield at a button hole,2.33,
+B12,"Euler buckling load of the whole rod, pinned at both ends",940,N
+B13,Buckling factor at a 200 N two-handed push,4.70,
 B14,Bearing stress at a button hole at a 300 N pull to free a stuck probe,25.5,MPa
 B15,Shear-out stress behind the button hole at 300 N,3.40,MPa
 B16,Shear stress in the two coupler pins at 300 N (epoxy ignored),11.9,MPa
@@ -50,7 +53,7 @@ E1-filter,Pressure drop at 20 L/min: filter,50.0,Pa
 E1-meter,Pressure drop at 20 L/min: meter,200,Pa
 E1-hose,Pressure drop at 20 L/min: hose,54.5,Pa
 E1-barbs,Pressure drop at 20 L/min: barbs,54.1,Pa
-E1-rod,Pressure drop at 20 L/min: rod,10.2,Pa
+E1-rod,Pressure drop at 20 L/min: rod,10.5,Pa
 E1-outlets,Pressure drop at 20 L/min: outlets,7.21,Pa
 E1-total,Pressure drop at 20 L/min: total,376,Pa
 E2,Air speed leaving the six 5 mm outlets at 20 L/min,2.83,m/s
@@ -68,15 +71,36 @@ F4--10,Video and light run time on one pack at -10 C,4.35,h
 F5--10,Run time with air and audio on one pack at -10 C,3.75,h
 F6,Run time with air and audio on both packs at -10 C (one swap),7.50,h
 F7,Peak current at full blower and full LEDs,1.43,A
-G1,Energy of a 1 m drop of the head and section 1 together,12.9,J
+G1,Energy of a 1 m drop of the head and section 1 together,14.2,J
 G2,"Minimum wall in the nose (camera bore to outside, and to the pocket)",2.85,mm
 H1,"open both cases, lift out the rod bundle and head",0.40,min
 H2,join the head and four sections (snap buttons),0.70,min
 H3,"plug the camera cable, fit the air hose, hang the water bottle",0.60,min
 H4,"switch on, check the picture and voice",0.40,min
-H5,"Estimated time to start searching, two people",2.10,min
+H5,"steer the tip both ways, lock it straight",0.10,min
+H6,"Estimated time to start searching, two people",2.20,min
 I1,"Surface unit mass with one pack fitted (case 2.6 kg, pack 0.85 kg, monitor 0.6 kg, others estimated)",6.16,kg
-I2,Estimated cost of the constructable design from bom/bom.csv,1578,USD
+I2,Estimated cost of the constructable design from bom/bom.csv,1780,USD
 I3,Value-engineering target (budget_usd),2000,USD
-I4,Under (+) or over (-) the target,422,USD
-I5,Cost without outside lathe time (builder has a lathe),1398,USD
+I4,Under (+) or over (-) the target,220,USD
+I5,Cost without outside lathe time (builder has a lathe),1540,USD
+J1,Joints in the bending section,5,
+J2,Bend at which a joint's link faces close (its stop),18.1,deg
+J3,"Most the tip can bend each way, all joints closed",90.4,deg
+J4,"Bending section length, base link flange to tip housing",66.2,mm
+J5-45,"Camera face at 45 deg: ahead of the nose front, and to the side","115 ahead, 72 to the side",mm
+J5-90,"Camera face at 90 deg: ahead of the nose front, and to the side","51 ahead, 109 to the side",mm
+J6,"Sideways reach of the bent tip at 45 deg, from the probe centreline (half-width of passage it needs)",83.2,mm
+J7,Overlap between neighbouring links with the tip bent 90 deg (model check),0,mm3
+J8,"Sideways reach of the bent tip at 90 deg, from the probe centreline",109,mm
+J9-45,"Wire pulled in on the inside of a 45 deg bend, paid out on the outside","11.1 in, 10.9 out",mm
+J9-90,"Wire pulled in on the inside of a 90 deg bend, paid out on the outside","22.2 in, 21.6 out",mm
+J10,"Drum (and lever) turn for 90 deg at the tip, 18 mm drum",70.7,deg
+J11,Drum turn for 45 deg at the tip,35.2,deg
+J12,"Moment to bend the camera cable 90 deg in the bending section (EI 5,000 N mm2 assumed)",119,N mm
+J13,"Wire tension at the tip, and at the drum with housing friction (mu 0.15, 180 deg of bends)",8.5 and 13.6,N
+J14,Thumb force on the 50 mm lever to hold 90 deg,4.88,N
+J15,Wire tension with a 30 N thumb push against the stop,83.3,N
+J16,"Safety factor on a 0.6 mm 7x7 stainless wire rope (250 N breaking, assumed)",3.00,
+J17,Shear in the two 2 mm hinge pins of a joint at that tension,13.3,MPa
+J18,"Bearing on the printed lugs at that tension (two pins, 2.4 mm lugs); PA12 yield about 45 MPa",8.68,MPa

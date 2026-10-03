@@ -1,4 +1,5 @@
-"""VoidScope concept media from the TRL 3 parametric model (constructable design, VDS-DDR-002).
+"""VoidScope concept media from the TRL 3 parametric model (constructable design, VDS-DDR-002, with the
+steerable camera tip of VDS-DDR-003).
 
 Run from the repo root:  python cad/src/concept_media.py [hero|cutaway|exploded|flow|web|blueprint ...]
 With no argument it draws everything; on a small machine run one picture per process. Geometry
@@ -8,7 +9,7 @@ The pictures are made with the pieces of .kit/concept.py render_all, one at a ti
 Axes: the probe lies along X at waist height with its tip toward +X; the surface unit stands on
 the ground on the -Y side with its lid open toward the operator; the reservoir stand beside it.
 The cutaway is of the head and the front of section 1 only, since the head is where the inside
-matters (camera, air plenum, speaker, water exit and bite valve).
+matters (air plenum, speaker, water exit, bite valve, steering wires, bending section and camera).
 """
 import shutil
 import sys
@@ -48,7 +49,9 @@ def cutaway():
     win = b.Pos((x0 + x1) / 2, 0, zc) * b.Box(x1 - x0, 80, 80)
     sel = [("Rod section 1 and coupler", ("rod1", "coupler1", "button1", "spring1"), "#D1D5DB"),
            ("Collar: socket, air plenum, outlets", ("collar", "spg_grommet"), "#6B7280"),
-           ("Nose", ("nose", "nose_screws"), "#9CA3AF"), ("Camera head", ("camera", "cam_ring"), "#1F2937"),
+           ("Nose", ("nose", "nose_screws"), "#9CA3AF"),
+           ("Steerable tip: base link, links, pins, tip housing", ("base", "base_screws", "link1", "link2", "link3", "link4", "tpins", "tiph", "grubs"), "#4B5563"),
+           ("Camera head", ("camera",), "#1F2937"), ("Steering wires and housings", ("swires", "housings"), "#7C3AED"),
            ("Camera cable", ("cable",), "#B45309"),
            ("Water guide", ("guide",), "#E5E7EB"), ("Water tube and bite valve", ("wtube", "bite"), "#2563EB")]
     ps = []
@@ -60,8 +63,8 @@ def cutaway():
         ps.append(Part(name, b.Pos(-(x0 + x1) / 2, 0, -zc) * sh, col))   # centred: the kit cutter is centred on x = z = 0
     ps = [p for p in K.cutaway_parts(ps, keep="+Y") if p.shape is not None and p.shape.volume > 1e-3]
     return K._render(ps, MD / "cutaway.png", azim=-90, elev=12,
-                     title=f"{PROJECT}: cutaway of the head",
-                     note="Head and front of section 1 cut on the vertical centre plane, near half removed (the speaker is on that half); seen from the -Y side, 12 deg elevation")
+                     title=f"{PROJECT}: cutaway of the head and steerable tip",
+                     note="Head, steerable tip (straight) and front of section 1 cut on the vertical centre plane, near half removed (the speaker is on that half); seen from the -Y side, 12 deg elevation")
 
 
 def exploded():
@@ -132,20 +135,22 @@ def blueprint():
     shown = with_operator(ps)
     views = project_views(Compound([p.shape for p in ps]), MD / "_views")
     views["iso"] = project_views(Compound([p.shape for p in shown]), MD / "_views_fig")["iso"]
-    s = Sheet(project=PROJECT, title=TITLE, dwg_no=DWG, rev="P2", author="Amish Chadha", date=DATE, theme="blueprint",
+    s = Sheet(project=PROJECT, title=TITLE, dwg_no=DWG, rev="P3", author="Amish Chadha", date=DATE, theme="blueprint",
               material="Massing model for concept communication",
-              revisions=[("P1", "Concept sheet", DATE, "AC"), ("P2", "Redrawn from the constructable design (VDS-DDR-002)", DATE, "AC")])
+              revisions=[("P1", "Concept sheet", DATE, "AC"), ("P2", "Redrawn from the constructable design (VDS-DDR-002)", DATE, "AC"),
+                         ("P3", "Steerable camera tip (VDS-DDR-003)", DATE, "AC")])
     s.add_ortho(views)
     s.add_svg(views["iso"], 276, 37, 140, 113, label="Isometric view", sublabel="Not to scale; figure is a 1.75 m person")
     s.add_notes("Key figures", [
-        f"Probe {D['length'] / 1000:.2f} m long; {D['working_length'] / 1000:.2f} m working length",
+        f"Probe {D['length'] / 1000:.2f} m long; goes {D['working_length'] / 1000:.2f} m into a void",
         f"Head and rod {D['max_od']:.0f} mm at most; passes a 51 mm core hole",
+        "Camera tip steers 90 deg each way from a thumb lever",
         "Four 1,050 mm aluminium sections, snap-button joints",
         "Camera 1080p, IP68, 12 LEDs; two-way voice at the tip",
         "Air through the rod bore: 20 L/min set, 0.9 kPa at most",
         "Water by gravity drip and bite valve; 4.5 mL/min at most",
         "Battery 12.8 V 6 Ah LiFePO4, two packs; 4.3 h at -10 C",
-        "Probe about 3.7 kg; surface unit about 6.2 kg (est.)"], x=276, y=168, width=140)
+        "Probe about 4.2 kg; surface unit about 6.2 kg (est.)"], x=276, y=168, width=140)
     s.save(MD / "concept-blueprint")
     shutil.rmtree(MD / "_views", ignore_errors=True); shutil.rmtree(MD / "_views_fig", ignore_errors=True)
     return MD / "concept-blueprint.png"

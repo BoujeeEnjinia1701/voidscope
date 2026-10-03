@@ -12,6 +12,7 @@ trl_evidence:
   - docs/03-requirements.md
   - docs/decisions/0001-trl2-review-decisions.md
   - docs/decisions/0002-design-for-construction.md
+  - docs/decisions/0003-steerable-camera-tip.md
   - docs/04-calcs/01-sizing.md
   - docs/04-calcs/sizing.py
   - cad/src/model.py
@@ -28,7 +29,7 @@ pitch: >-
   Searches rubble voids with a camera probe that also delivers water and air to a trapped survivor.
 problem: >-
   After a building collapse, local crews reach most survivors first but rarely have search cameras, and those who find someone alive still need to keep them supplied while the dig goes on. Commercial search cameras cost more than many local teams can pay and do not deliver water or air.
-budget_usd: 2000  # value-engineering target (STANDARDS section 18); estimated cost USD 1,578 (VDS-CAL-001)
+budget_usd: 2000  # value-engineering target (STANDARDS section 18); estimated cost USD 1,780 (VDS-CAL-001 v0.2)
 difficulty: 3  # 1 easiest, 5 hardest
 hero_image: media/hero.png
 licenses:
