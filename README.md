@@ -81,7 +81,7 @@ The design is constructable: every part can be cut, drilled, turned or bought, a
 >
 > Only trained rescue teams should use it, inside their own incident command and structural safety procedures. The operator never enters the void.
 >
-> Water can be inhaled by a survivor who is drowsy, injured or lying badly. Give water only under the direction of the team's medical lead, only to a conscious person who can drink, and only by the gravity drip through the bite valve, never under pressure. Never remove the capillary that caps the flow.
+> Water can be inhaled by a survivor who is drowsy, injured or lying badly. Give water only under the direction of the team's medical lead, only to a conscious person who can drink, and only by the gravity drip through the bite valve, never under pressure. To offer water, steer the camera tip fully aside so the bite valve on the nose can be reached; the camera may then not show the survivor's mouth, so keep talking and shut the clamp at any cough or choking. Never remove the capillary that caps the flow.
 >
 > Fresh air must be clean and low pressure; blowing air into a void can raise dust. Filter the intake and never connect fuel-engine exhaust, a compressor or compressed gas cylinders. The blower is chosen so it cannot exceed 1 kPa even with the tip blocked.
 >

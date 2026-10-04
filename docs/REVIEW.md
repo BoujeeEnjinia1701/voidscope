@@ -1,5 +1,40 @@
 # Review note: VoidScope
 
+## Session 2026-10-03: round 2 requirement decisions applied
+
+Amish, 2026-10-03: "i approve all of the 47 recommendations provided by you. Execute them." For VoidScope this is portfolio decision 46, the recommendation on register open decision 1 (bite valve access after decision 3A), decided exactly as worded: "A for the first prototype, B if drills find the valve hard to reach".
+
+### What changed
+
+- `docs/decisions/0004-bite-valve-access.md` (VDS-DDR-004, new): decision, options, consequences and safety.
+- `docs/06-design-decisions.md` (VDS-DEC-001 v0.3): open decision 1 moved from "Proposed, awaiting Amish" to Decisions made; option B recorded as the fallback; no open decisions remain; change log added.
+- `docs/05-build-plan.md` (VDS-BLD-001 v0.3): new first check "Bite valve access", run in drills with the medical lead, the tip steered fully to each side; safety stop S7 now says the tip is steered fully aside and locked, reaching the valve is confirmed in drills, and the clamp is shut at any cough, choking or loss of response. No part or step changed.
+- `docs/02-concept.md` (VDS-PRC-001 v0.5): how water is offered (tip steered fully aside) and the water safety note.
+- `README.md`: water safety paragraph adds steering the tip aside and the loss of the camera view of the mouth.
+- `project.yaml`: VDS-DDR-004 added to `trl_evidence`; `budget_usd` unchanged.
+- No change to `cad/src/model.py`, the calculations, the BOM, the drawings or the media. No re-render is needed.
+
+### Requirement status
+
+Unchanged: eleven of twelve requirements met on paper, R9 (setup in 3 minutes) estimated. Bite valve access is not a numbered requirement; it is now a drill check with the medical lead.
+
+### Cost
+
+Value-engineering target: USD 2,000. Estimated cost of the constructable design: USD 1,780 (USD 220 under the target), unchanged.
+
+### Decisions proposed and awaiting Amish
+
+None new. If the drills find the valve hard to reach, option B (a 60 mm flexible extension of the water tube clipped along the sheath) comes back to Amish with the drill findings and its cost.
+
+### Safety
+
+- Aspiration stays the main water hazard and stays in every safety note: water only under the medical lead's direction, only to a conscious person who can speak and drink, only by the capillary-capped gravity drip through the bite valve, never under pressure.
+- New observation: with the tip steered fully aside the camera looks sideways, 109 mm off the nose, and may not show the survivor's mouth while they drink. The operator may then judge coughing or choking by voice only. The drill check records whether a partly steered tip keeps the mouth in view and still leaves the valve within reach.
+
+### Recommended next step
+
+None at TRL 3 for this decision. At TRL 4, the bite valve access drill with the co-design medical lead.
+
 ## Session 2026-09-30: scaffolded
 
 ### What was done

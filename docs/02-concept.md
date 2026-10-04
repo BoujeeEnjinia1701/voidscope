@@ -3,7 +3,7 @@ doc_id: VDS-PRC-001
 title: VoidScope design precis
 project: VoidScope
 doc_type: Precis
-version: "0.4"
+version: "0.5"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -25,6 +25,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: "Steerable camera tip (Amish's decision 3A, VDS-DDR-003): summary, key choice 2, numbers from VDS-CAL-001 v0.2, patent note"
+- version: "0.5"
+  date: '2026-10-03'
+  author: Amish Chadha
+  change: "Bite valve access decided by Amish (VDS-DDR-004, decision 46): tip steered fully aside to offer water; water safety note extended"
 ---
 
 # VoidScope design precis
@@ -43,7 +47,7 @@ Two rescuers carry two cases. The long case holds the four rod sections side by 
 
 To search, the crew joins the sections (each snap button clicks into the next section), plugs the camera cable and the air hose into the surface unit and feeds the probe into a gap or a cored hole while watching the monitor. The camera is aimed by turning the rod; depth marks every 100 mm show how far in the tip is.
 
-When they find someone, they leave the probe in place. They talk through the speaker at the tip, which also works as the microphone. If the team's medical lead decides that the person is conscious and able to drink, the crew hangs the water bottle on its stand no more than 1 m above the tip and opens the roller clamp. The survivor pulls the bite valve out of its pocket on the nose and sips; the tube pays out from the surface. A 600 mm capillary in the line sets the highest possible flow, so even a bottle hung too high on a hot day cannot pass more than 4.5 mL/min. The blower is set to about 20 L/min on the flow meter to freshen the air in the void while the dig goes on around the probe.
+When they find someone, they leave the probe in place. They talk through the speaker at the tip, which also works as the microphone. If the team's medical lead decides that the person is conscious and able to drink, the crew hangs the water bottle on its stand no more than 1 m above the tip and opens the roller clamp. The operator steers the camera tip fully to one side and locks it, so the bite valve on top of the nose is the foremost part (VDS-DDR-004); the survivor pulls the bite valve out of its pocket and sips; the tube pays out from the surface. A 600 mm capillary in the line sets the highest possible flow, so even a bottle hung too high on a hot day cannot pass more than 4.5 mL/min. The blower is set to about 20 L/min on the flow meter to freshen the air in the void while the dig goes on around the probe.
 
 *Figure 2. Air and water paths, with estimated flows.*
 
@@ -116,7 +120,7 @@ From the preliminary patent, trademark and prior-art screen (not legal advice):
 > **Safety:** VoidScope is safety-critical rescue equipment. It is published as an open engineering reference, never as certified rescue equipment, and it is not a medical device.
 >
 > - **Structure.** Only trained rescue teams should use it, inside their own incident command and structural safety procedures. The operator never enters the void and never stands on unstable debris to push the probe.
-> - **Water.** Water can be inhaled by a survivor who is drowsy, injured or lying badly. Give water only under the direction of the team's medical lead, only to a conscious person who can drink, and only by the gravity drip. Never connect a pump, a pressurised container or a syringe to the line once the probe is in the void. The capillary and bite valve are the safety stops; never remove the capillary to speed up the flow.
+> - **Water.** Water can be inhaled by a survivor who is drowsy, injured or lying badly. Give water only under the direction of the team's medical lead, only to a conscious person who can drink, and only by the gravity drip. Steer the camera tip fully aside and lock it before offering water; reaching the valve past the tip is confirmed in drills with the medical lead, and the camera may not show the survivor's mouth, so keep talking and shut the clamp at any cough or choking. Never connect a pump, a pressurised container or a syringe to the line once the probe is in the void. The capillary and bite valve are the safety stops; never remove the capillary to speed up the flow.
 > - **Air.** Air must be clean and at low pressure. Filter the intake, keep it away from engine exhaust and smoke, and never connect a compressor or a gas cylinder to the tail cap. Blowing air can raise dust; start at the lowest setting and watch the picture.
 > - **Battery.** The packs are 12.8 V lithium iron phosphate with built-in protection. Charge them only with the matching charger, away from the kit, on a non-combustible surface, never below 0 °C.
 > - **Hygiene.** Parts that touch the survivor (water tube, bite valve) are single-use. The bottle is cleaned to a written procedure between uses.

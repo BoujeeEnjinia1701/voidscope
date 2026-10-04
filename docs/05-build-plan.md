@@ -3,7 +3,7 @@ doc_id: VDS-BLD-001
 title: VoidScope prototype build plan
 project: VoidScope
 doc_type: Build plan
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
     date: '2026-10-03'
     author: Amish Chadha
     change: Steerable camera tip and steering control added (VDS-DDR-003, Amish's decision 3A); new sketches, joints and steps
+  - version: "0.3"
+    date: '2026-10-03'
+    author: Amish Chadha
+    change: Bite valve access (VDS-DDR-004, decision 46 A); first check for reaching the valve past the steered tip, safety stop S7 extended; no part or step changed
 ---
 
 # VoidScope prototype build plan
@@ -505,6 +509,7 @@ These are the checks a TRL 4 test report would record; this plan only lists them
 | Joints | Design loads | Pull each joint by hand, then hang a 30 kg (300 N) load from the tip with the probe vertical; twist each joint | Nothing moves; each button releases with one press |
 | Picture | R3 | Dark box, 20 mm letters at 1 m, then with dust | Letters readable on the monitor and in the recording |
 | Sealing | R4 | Head under 1 m of water for 30 min with the camera on | Picture stays clear; no water in the head |
+| Bite valve access (drill, with the medical lead) | R5; VDS-DDR-004 | A volunteer lies in a mock void facing the probe. Steer the tip fully to one side and lock it; the volunteer reaches, pulls out and bites the valve past the tip; repeat to the other side; note whether a partly steered tip keeps the volunteer's mouth in view on the monitor | The medical lead confirms the valve is easy to reach each side. If not, record why: option B (valve on a 60 mm extension along the sheath) goes back to Amish |
 | Water ceiling | R5 | Bottle at 1.0 m above the tip, clamp fully open, collect at the bite valve held open for 10 min | Between 1.2 and 1.8 mL/min at room temperature; none with the clamp shut or the valve not bitten |
 | Air | R6 | Flow meter at 20 L/min; manometer at a blocked tip at full speed | 20 L/min reached; blocked-tip pressure 1.0 kPa or less |
 | Battery | R7 | Run video and light from one full pack | 4 h or more at room temperature (the -10 °C run is a TRL 4 test) |
@@ -523,7 +528,7 @@ Stop at each point. Carry on only when everything listed is true.
 - **S4. Before the blower runs on the probe.** With the outlet blocked by a gloved thumb, the blower at full speed cannot be felt pushing hard; a manometer at the outlet reads 1.0 kPa or less. The intake filter is fitted and faces away from any engine or smoke.
 - **S5. Before water goes into the line.** The water set is new and sealed until now; the capillary and strainer are in the line; there is no pump, pressurised container or syringe connected to the bottle side; the bottle hangs no more than 1 m above the tip. Prime with the syringe through the stopcock only before the probe goes in, then turn the stopcock to the bottle and close the syringe port.
 - **S6. Before the probe goes into any void, even in training.** The site's structural safety officer has cleared the work position; the operator stays outside the void and off unstable debris; the probe is never used as a lever.
-- **S7. Before water is offered to a person (outside this plan; drills only).** The team's medical lead directs it; the person is conscious, can speak and can drink; the flow is set by the roller clamp from closed; the camera tip is steered aside so the bite valve can be reached.
+- **S7. Before water is offered to a person (outside this plan; drills only).** The team's medical lead directs it; the person is conscious, can speak and can drink; the flow is set by the roller clamp from closed; the camera tip is steered fully to one side and locked so the bite valve on the nose is the foremost part (VDS-DDR-004); reaching the valve has been confirmed in drills with the medical lead; the operator keeps talking with the person while they drink and shuts the clamp at any cough, choking or loss of response. Water can be inhaled; the medical lead decides every time.
 - **S8. Charging.** Packs are charged only on their own charger, away from the kit, on a non-combustible surface, never below 0 °C and never unattended on a first charge.
 - **S9. Before the tip goes into or comes out of a hole.** The lever is upright, the lock knob is tight and the tip is straight on the monitor. Never force the lever past its stops, and never use the bent tip to move debris: the links are printed nylon.
 
