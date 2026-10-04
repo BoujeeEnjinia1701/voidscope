@@ -3,7 +3,7 @@ doc_id: VDS-REQ-001
 title: VoidScope requirements
 project: VoidScope
 doc_type: Requirements
-version: "0.4"
+version: "0.5"
 status: Draft
 date: '2026-10-03'
 author: Amish Chadha
@@ -25,6 +25,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: "R11 restated by Amish (decision 3A) as seeing around a 45-degree bend from a straight hole, with a test-box verification; met on paper by the steerable camera tip (VDS-DDR-003); status of R1, R2, R4, R8 and R9 updated from VDS-CAL-001 v0.2"
+- version: "0.5"
+  date: '2026-10-03'
+  author: Amish Chadha
+  change: "Round-2 decision 3A (VDS-DDR-004): water offered with the tip steered aside; medical lead's confirmation in drills. Requirement wording unchanged"
 ---
 
 # VoidScope requirements
@@ -52,7 +56,7 @@ Eleven of the twelve requirements are met on paper by the constructable design w
 
 - Local crews can open or find gaps of about 50 mm into most voids of interest.
 - A rigid, sectioned rod is good enough for a first version, with a camera tip that bends in one plane; turning the rod chooses the plane. Following a bent channel with the rod itself is not required (R11 as restated).
-- A slow gravity drip through a bite valve is an acceptable way to give water when a medical lead directs it; the medical lead's acceptance is a TRL 4 item.
+- A slow gravity drip through a bite valve is an acceptable way to give water when a medical lead directs it; the bite valve stays on the nose and the operator steers the tip aside to give water (drill card, build plan section 5a); the medical lead's confirmation in drills is a TRL 4 item.
 - Commodity sealed pipe-inspection camera heads meet the image, light and sealing targets.
 
 > **Safety:** These requirements describe rescue equipment that delivers water and air to a trapped person and carries a lithium battery. The steerable tip must be locked straight before it goes into or comes out of a hole. Meeting them on paper does not make the design safe to use. VoidScope is an open engineering reference, not certified rescue equipment and not a medical device; see VDS-PRC-001, Safety.

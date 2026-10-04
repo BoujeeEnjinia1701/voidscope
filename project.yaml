@@ -13,7 +13,7 @@ trl_evidence:
   - docs/decisions/0001-trl2-review-decisions.md
   - docs/decisions/0002-design-for-construction.md
   - docs/decisions/0003-steerable-camera-tip.md
-  - docs/decisions/0004-bite-valve-access.md
+  - docs/decisions/0004-bite-valve-on-the-nose.md
   - docs/04-calcs/01-sizing.md
   - docs/04-calcs/sizing.py
   - cad/src/model.py

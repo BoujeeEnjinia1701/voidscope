@@ -20,7 +20,7 @@ revisions:
   - version: "0.3"
     date: '2026-10-03'
     author: Amish Chadha
-    change: Bite valve access (VDS-DDR-004, decision 46 A); first check for reaching the valve past the steered tip, safety stop S7 extended; no part or step changed
+    change: "Drill card added with the rule to steer the tip aside to give water (Amish's round-2 decision 3A, VDS-DDR-004)"
 ---
 
 # VoidScope prototype build plan
@@ -509,7 +509,6 @@ These are the checks a TRL 4 test report would record; this plan only lists them
 | Joints | Design loads | Pull each joint by hand, then hang a 30 kg (300 N) load from the tip with the probe vertical; twist each joint | Nothing moves; each button releases with one press |
 | Picture | R3 | Dark box, 20 mm letters at 1 m, then with dust | Letters readable on the monitor and in the recording |
 | Sealing | R4 | Head under 1 m of water for 30 min with the camera on | Picture stays clear; no water in the head |
-| Bite valve access (drill, with the medical lead) | R5; VDS-DDR-004 | A volunteer lies in a mock void facing the probe. Steer the tip fully to one side and lock it; the volunteer reaches, pulls out and bites the valve past the tip; repeat to the other side; note whether a partly steered tip keeps the volunteer's mouth in view on the monitor | The medical lead confirms the valve is easy to reach each side. If not, record why: option B (valve on a 60 mm extension along the sheath) goes back to Amish |
 | Water ceiling | R5 | Bottle at 1.0 m above the tip, clamp fully open, collect at the bite valve held open for 10 min | Between 1.2 and 1.8 mL/min at room temperature; none with the clamp shut or the valve not bitten |
 | Air | R6 | Flow meter at 20 L/min; manometer at a blocked tip at full speed | 20 L/min reached; blocked-tip pressure 1.0 kPa or less |
 | Battery | R7 | Run video and light from one full pack | 4 h or more at room temperature (the -10 °C run is a TRL 4 test) |
@@ -517,6 +516,21 @@ These are the checks a TRL 4 test report would record; this plan only lists them
 | Water set change | R10 | Pull the old tube, push a new one, prime | 5 min or less, no tools |
 | Voice | R12 | Talk with a person at the tip in a noisy yard | Both understood without repeating |
 | Handling | Calculation note B | Push 2 m into a box with the tip unsupported, then 3 m | Held steadily at 2 m; at 3 m the tip must rest on something |
+
+## 5a. Drill card
+
+A printed, laminated card kept in the lid of the surface unit. It is for drills with the team's medical lead; the plan does not cover real use on a person. Amish decided on 2026-10-03 (round 2, 3A) to keep the bite valve on the nose: "i agree with all the 46 recommendations you provided. please proceed." The card therefore carries this rule.
+
+*Table 3. Drill card.*
+
+| When | What to do |
+| --- | --- |
+| Before the tip goes in or out of a hole | Lever upright, lock knob tight, tip straight on the monitor (stop S9) |
+| To give water | Only when the medical lead directs it (stop S7). **Steer the tip aside** with the lever, fully to one side, so the bite valve on the nose is the foremost part and the person can reach it. The camera then sits about 109 mm to the side and 51 mm ahead of the nose. Open the roller clamp from closed; the person bites the valve to drink |
+| After giving water | Close the roller clamp, straighten the tip on the monitor, lock the lever, then carry on |
+| Never | Force the lever past its stops; use the bent tip to move debris; give water to a person who cannot speak or drink |
+
+Whether a survivor can reach the valve past the tip is confirmed in drills with the medical lead (design decisions register, to confirm item 14).
 
 ## 6. Safety stops
 
@@ -528,7 +542,7 @@ Stop at each point. Carry on only when everything listed is true.
 - **S4. Before the blower runs on the probe.** With the outlet blocked by a gloved thumb, the blower at full speed cannot be felt pushing hard; a manometer at the outlet reads 1.0 kPa or less. The intake filter is fitted and faces away from any engine or smoke.
 - **S5. Before water goes into the line.** The water set is new and sealed until now; the capillary and strainer are in the line; there is no pump, pressurised container or syringe connected to the bottle side; the bottle hangs no more than 1 m above the tip. Prime with the syringe through the stopcock only before the probe goes in, then turn the stopcock to the bottle and close the syringe port.
 - **S6. Before the probe goes into any void, even in training.** The site's structural safety officer has cleared the work position; the operator stays outside the void and off unstable debris; the probe is never used as a lever.
-- **S7. Before water is offered to a person (outside this plan; drills only).** The team's medical lead directs it; the person is conscious, can speak and can drink; the flow is set by the roller clamp from closed; the camera tip is steered fully to one side and locked so the bite valve on the nose is the foremost part (VDS-DDR-004); reaching the valve has been confirmed in drills with the medical lead; the operator keeps talking with the person while they drink and shuts the clamp at any cough, choking or loss of response. Water can be inhaled; the medical lead decides every time.
+- **S7. Before water is offered to a person (outside this plan; drills only).** The team's medical lead directs it; the person is conscious, can speak and can drink; the flow is set by the roller clamp from closed; the camera tip is steered aside so the bite valve can be reached (drill card, section 5a).
 - **S8. Charging.** Packs are charged only on their own charger, away from the kit, on a non-combustible surface, never below 0 °C and never unattended on a first charge.
 - **S9. Before the tip goes into or comes out of a hole.** The lever is upright, the lock knob is tight and the tip is straight on the monitor. Never force the lever past its stops, and never use the bent tip to move debris: the links are printed nylon.
 

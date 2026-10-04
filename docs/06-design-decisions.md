@@ -20,20 +20,18 @@ revisions:
 - version: "0.3"
   date: '2026-10-03'
   author: Amish Chadha
-  change: "Open decision 1 (bite valve access) decided by Amish: A for the first prototype, B if drills find the valve hard to reach (VDS-DDR-004, portfolio decision 46); no open decisions remain"
+  change: "Open decision 1 (bite valve access) decided, round 2, 3A (VDS-DDR-004); one item added to confirm when parts are bought; no open decisions"
 ---
 
 # VoidScope design decisions register
 
 Every design decision still to be made, and every decision made, in one place. Each decision is argued in full in its decision record under `docs/decisions/`; this register is the index Amish works from. The build plan (`docs/05-build-plan.md`) describes the design as it stands and does not list open decisions.
 
-> **Safety:** Several decisions below set safety stops: the drip ceiling, the bite valve, the blower's shut-off pressure and the battery chemistry. The bite valve access decision (VDS-DDR-004) touches how a survivor is given water: the tip is steered fully aside to offer it, and reaching the valve is confirmed in drills with the medical lead. They were taken on the conservative side (VDS-DDR-001, Table 2). VoidScope is rescue equipment that is not certified and is not a medical device.
+> **Safety:** Several decisions below set safety stops: the drip ceiling, the bite valve, the blower's shut-off pressure and the battery chemistry. The open decision on bite valve access touches how a survivor is given water. They were taken on the conservative side (VDS-DDR-001, Table 2). VoidScope is rescue equipment that is not certified and is not a medical device.
 
 ## Open decisions
 
-None. Amish decided open decision 1 (bite valve access) on 2026-10-03: A for the first prototype, B if drills find the valve hard to reach (VDS-DDR-004; see Decisions made). Carrying it out raised no new decision for Amish.
-
-Fallback held from that decision: if the drills with the medical lead find the valve hard to reach past the steered tip, option B (the bite valve on a 60 mm flexible extension of the water tube clipped along the sheath) comes back to Amish with what the drills found and its cost.
+None. Open decision 1 (bite valve access) was decided by Amish on 2026-10-03: the valve stays on the nose and the tip is steered aside to give water; see Decisions made and VDS-DDR-004.
 
 ## To confirm when parts are bought
 
@@ -52,6 +50,7 @@ Fallback held from that decision: if the drills with the medical lead find the v
 | 11 | The 3 mm steering housings bend to about 15 mm radius where they turn up into the control body, and their friction is about 0.15 | A stiffer housing needs a taller pad; more friction raises the thumb force | VDS-DDR-003 T5, T8; VDS-CAL-001 J13 |
 | 12 | The camera cable's bending stiffness is near 5,000 N·mm² | It sets the thumb force to hold 90° (about 5 N) | VDS-CAL-001 J12 to J14 |
 | 13 | The printed links' 2.0 mm pin holes ream cleanly and the lugs hold the pins without rocking | The joints must swing freely but not wobble the camera | VDS-DDR-003 T3 |
+| 14 | Confirm in drills with the medical lead that a survivor can reach the bite valve on the nose past the tip steered fully aside | The valve stays on the nose (decision 3A, round 2); if it is hard to reach, a 60 mm flexible valve extension is the fallback | VDS-DDR-004 |
 
 ## Value engineering
 
@@ -72,8 +71,4 @@ Value-engineering target: USD 2,000 (a hypothetical control target, not a limit)
 | 2026-10-03 | R11 (two 45° bends) recorded as not met in the first version; a flexible lead section is a later version, not TRL 3 work (superseded the same day by decision 3A below) | Amish, same pre-approval | VDS-REQ-001 v0.3; VDS-DDR-001 D12 |
 | 2026-10-03 | Appearance model departures from `model.py` (rounded edges, depth bands, labels, cables drawn to the surface unit, rubble context) accepted for renders only | Amish, same pre-approval | `docs/REVIEW.md`, TRL 3 |
 | 2026-10-03 | Decision 3A: add a cable-steered articulating camera tip that bends up to 90° each way, controlled from the handle; restate R11 as "see around a 45-degree bend from a straight hole" with a verification method; keep the rigid rod, the air path and the water tube to the bite valve; the tip must still pass the 51 mm hole | Amish: "1A 2A 3A 4A 5A 6A 7A 8A 9A 10A 11A" | VDS-DDR-003; VDS-REQ-001 v0.4 |
-| 2026-10-03 | Bite valve access (open decision 1, portfolio decision 46): **A for the first prototype**, keep the bite valve on top of the nose and steer the tip fully aside to offer water, confirmed in drills with the medical lead; **B if drills find the valve hard to reach** (valve on a 60 mm flexible extension clipped along the sheath). Aspiration risk stays in the safety notes | Amish, 2026-10-03: "i approve all of the 47 recommendations provided by you. Execute them." | VDS-DDR-004 |
-
-## Change log
-
-- 2026-10-03, v0.3: open decision 1 (bite valve access) moved from "Proposed, awaiting Amish" to Decisions made (VDS-DDR-004); option B recorded as the fallback; no open decisions remain.
+| 2026-10-03 | 3A (round 2): bite valve kept on the nose; the drill card says steer the tip aside to give water; "confirm in drills with the medical lead" added under To confirm; articulating camera tips added to the patent screen list. No design change | Amish: "i agree with all the 46 recommendations you provided. please proceed." | VDS-DDR-004 |

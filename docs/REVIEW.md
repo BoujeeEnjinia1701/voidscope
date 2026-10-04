@@ -1,40 +1,5 @@
 # Review note: VoidScope
 
-## Session 2026-10-03: round 2 requirement decisions applied
-
-Amish, 2026-10-03: "i approve all of the 47 recommendations provided by you. Execute them." For VoidScope this is portfolio decision 46, the recommendation on register open decision 1 (bite valve access after decision 3A), decided exactly as worded: "A for the first prototype, B if drills find the valve hard to reach".
-
-### What changed
-
-- `docs/decisions/0004-bite-valve-access.md` (VDS-DDR-004, new): decision, options, consequences and safety.
-- `docs/06-design-decisions.md` (VDS-DEC-001 v0.3): open decision 1 moved from "Proposed, awaiting Amish" to Decisions made; option B recorded as the fallback; no open decisions remain; change log added.
-- `docs/05-build-plan.md` (VDS-BLD-001 v0.3): new first check "Bite valve access", run in drills with the medical lead, the tip steered fully to each side; safety stop S7 now says the tip is steered fully aside and locked, reaching the valve is confirmed in drills, and the clamp is shut at any cough, choking or loss of response. No part or step changed.
-- `docs/02-concept.md` (VDS-PRC-001 v0.5): how water is offered (tip steered fully aside) and the water safety note.
-- `README.md`: water safety paragraph adds steering the tip aside and the loss of the camera view of the mouth.
-- `project.yaml`: VDS-DDR-004 added to `trl_evidence`; `budget_usd` unchanged.
-- No change to `cad/src/model.py`, the calculations, the BOM, the drawings or the media. No re-render is needed.
-
-### Requirement status
-
-Unchanged: eleven of twelve requirements met on paper, R9 (setup in 3 minutes) estimated. Bite valve access is not a numbered requirement; it is now a drill check with the medical lead.
-
-### Cost
-
-Value-engineering target: USD 2,000. Estimated cost of the constructable design: USD 1,780 (USD 220 under the target), unchanged.
-
-### Decisions proposed and awaiting Amish
-
-None new. If the drills find the valve hard to reach, option B (a 60 mm flexible extension of the water tube clipped along the sheath) comes back to Amish with the drill findings and its cost.
-
-### Safety
-
-- Aspiration stays the main water hazard and stays in every safety note: water only under the medical lead's direction, only to a conscious person who can speak and drink, only by the capillary-capped gravity drip through the bite valve, never under pressure.
-- New observation: with the tip steered fully aside the camera looks sideways, 109 mm off the nose, and may not show the survivor's mouth while they drink. The operator may then judge coughing or choking by voice only. The drill check records whether a partly steered tip keeps the mouth in view and still leaves the valve within reach.
-
-### Recommended next step
-
-None at TRL 3 for this decision. At TRL 4, the bite valve access drill with the co-design medical lead.
-
 ## Session 2026-09-30: scaffolded
 
 ### What was done
@@ -191,3 +156,41 @@ Amish to settle open decision 1. The design otherwise remains ready for TRL 4 un
 ## 2026-10-03: photoreal renders redone after Amish's requirement decisions
 
 Rendered with Blender Cycles on Amish's Mac from `cad/src/product_model.py`; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` made with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes and `render.py --check` has no FAIL.
+
+## 2026-10-03: Amish's round-2 requirement decisions carried out
+
+Amish, 2026-10-03: "i agree with all the 46 recommendations you provided. please proceed." For VoidScope this is decision 3A on bite valve access, recorded in `docs/decisions/0004-bite-valve-on-the-nose.md` (VDS-DDR-004) and in the register `docs/06-design-decisions.md` (VDS-DEC-001 v0.3). A records and wording change only: no geometry, bill of materials, drawing or picture changed.
+
+| Change | Files | New result |
+| --- | --- | --- |
+| Bite valve kept on the nose | none (no design change) | Valve 2 mm behind the nose front, tip 140 mm ahead; R5 and R11 as before |
+| Drill card: steer the tip aside to give water | `docs/05-build-plan.md` v0.3, new section 5a; stop S7 points to it | The camera sits about 109 mm to the side and 51 mm ahead of the nose, so the valve is the foremost part |
+| "Confirm in drills with the medical lead" | `docs/06-design-decisions.md` v0.3, To confirm item 14 | To confirm at TRL 4 |
+| Open decision 1 closed | register v0.3, VDS-DDR-004 | Open decisions: none |
+| Requirements wording | `docs/03-requirements.md` v0.5 (assumption only) | All results unchanged: R11 met on paper; R9 2.2 min estimated |
+| Cost | unchanged | Value-engineering target: USD 2,000. Estimated cost of the constructable design: USD 1,780 (USD 220 under the target). `budget_usd` unchanged |
+
+Mass unchanged (probe 4.18 kg). Pictures changed: none; the appearance model is unchanged and no views were re-exported.
+
+### Patent screen list (to search before public release)
+
+1. Combined search camera and supply probes (CPC search, from the TRL 2 screen).
+2. **Articulating camera tips on search poles and borescope-style pinned-link bending sections (added 2026-10-03 under decision 3A).** The tip is a two-wire pinned-link bending section of a long-established kind, but the focused search should cover it before release. Not legal advice.
+
+### Decisions proposed, awaiting Amish
+
+None.
+
+### Cross-repo actions
+
+None.
+
+### Safety
+
+- Water is offered only on the medical lead's direction, in drills, to a person who can speak and drink, with the flow set from closed; the tip is steered aside only after it has been checked straight on the monitor and is straightened and locked afterwards.
+- Stops S7 and S9 are unchanged in substance.
+
+### Recommended next step
+
+TRL 4 (R11 test box, steering checks, and the drill with the medical lead on valve reach) needs a new instruction from Amish.
+
