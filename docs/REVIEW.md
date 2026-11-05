@@ -194,3 +194,60 @@ None.
 
 TRL 4 (R11 test box, steering checks, and the drill with the medical lead on valve reach) needs a new instruction from Amish.
 
+
+## Session 2026-10-24: kit 1.9.1 upgrade
+
+Upgrade from kit 1.7 to kit 1.9.1 (pipeline documents and detailed CAD for every option) under Amish's instructions of 2026-10-23 (standing instruction on STEM failures) and 2026-10-24 ("I want detailed TRL3 CAD", "Detail every option", "Kit 1.9.1 rollout"). TRL cap respected: no hardware, test plans, purchasing lists or build-log entries. Nothing declined by Amish was found in this file or in `docs/decisions/0001` to `0004`, so no declined option was re-proposed. Committed, not pushed.
+
+### What was added
+
+- Pipeline: `docs/01b-stem-check.md` (VDS-STM-001), `docs/02a-concept-options.md` (VDS-OPT-001), `docs/03a-user-requirements.md` (VDS-URS-001, 16 URs), `docs/03-requirements.md` migrated to VDS-PRS-001 v1.0 (19 PRs, old R numbers in "Was"), `docs/03b-traceability.md` (generated, 0 gaps), `docs/07-regulatory.md`, `08-feasibility.md`, `09-risk.md` (PHA with 10 hazards and a 14-row design FMEA), `10-market.md` (cited prices with dates), `11-plan.md`, decision records VDS-DDR-005 (concept selection) and VDS-DDR-006 (STEM fixes); VDS-PRB-001 v0.4 with users and stakeholders tables; VDS-CAL-001 v0.3 (new section K, droop, dust and capillary corrections); VDS-BLD-001 v0.4; VDS-PRC-001 v0.5; VDS-DEC-001 v0.4; `project.yaml` (`stage: P3`, `stem_check: open`, `concept_options`, `concept_chosen: A (proposed)`, evidence list).
+- CAD (kit 1.9): `cad/src/model.py` rebuilt to the kit interface (`PARAMS`, `OPTIONS`, `PRINCIPLES`, `CHOSEN`, `OPTION_VIEWS`, `components(option)`), with the original geometry in `cad/src/vds_geom.py` and options B and C in `cad/src/vds_options.py`; `cad/fidelity.json` passes at D3. Option A keeps every existing dimension. STEP per part for A and an assembly STEP per option in `cad/step/` (largest file under 45 MB), STL in `cad/stl/`.
+- Regenerated from the new model: drawing VDS-DWG-001 (Rev P4, hidden-line views with the viewpoint tilted 0.006 degrees off axis) and making sketches VDS-DWG-101 to 114, the build plan pictures, the concept media (hero with a mannequin standing on the ground, cutaway, exploded, flow, blueprint, `model.glb` 1.6 MB, viewer).
+- `cad/src/product_model.py` rebuilt from `components("A")`: views hero (outdoor, concrete ground at z = 0, sun azimuth within 60 degrees of the camera, mannequin standing on the ground, rubble site parts named "(site)"), studio, exploded and detail.
+
+### STEM check, verdicts and fixes
+
+26 claims: 12 within known science, 14 plausible, none failing. Fixes under the standing instruction (VDS-DDR-006): F1 tip heat (85 C to 44 C at 35 C ambient: black anodised housing, LEDs dimmed), F2 option B free reach capped at 1 m, F3 capillary 750 mm (the 600 mm one passed 5 mL/min with a bore 5 per cent oversize), F4 touch criterion 48 C for 10 minutes, F5 blower on a regulated supply with a speed cap. The independent reviewer (headless `claude -p --model claude-opus-5-5`, no subagent tool) also corrected the droop at 2 m (17 mm to 39 mm), split the dust case and downgraded S1, S2, S12, S13 and SB2 to plausible; its findings and what changed are in VDS-STM-001, Independent review.
+
+### Option scores and CAD (from `cad/fidelity.json`)
+
+| Option | Score (of 205) | Parts | Fasteners | Welds | Mass (kg) |
+| --- | --- | --- | --- | --- | --- |
+| A rigid sectioned rod with steerable tip | 165 | 143 | 80 | 0 | 11.8 |
+| B reel-fed flexible push cable | 135 | 125 | 80 | 2 | 26.6 |
+| C tripod and winch lowered sonde | 128 | 143 | 70 | 16 | 15.5 |
+
+Mass includes the shared surface unit and stand. A leads B by 22 per cent: A is proposed, awaiting Amish.
+
+### Requirements not met or open
+
+None is unmet on paper. To verify at TRL 4: PR-006 (bite valve), PR-007 (blocked-tip pressure now needs the real blower and the speed cap), PR-010 (setup time). Tight margins: PR-005 12 per cent, PR-014 44 C against 48 C at 35 C ambient (54 C at 45 C, tip kept off the survivor). Cost USD 1,780 against the USD 2,000 value-engineering target; `budget_usd` unchanged. The black anodising of the tip housing is not priced (to quote).
+
+### Decisions proposed and awaiting Amish
+
+1. Concept choice (VDS-DEC-001 open decision 2): option A recommended; B and C kept as modelled alternatives.
+2. Reviewer suggestions not adopted, left as options: thermistor cut-back at the tip, passive relief valve at about 0.8 kPa (the most useful if the blower's shut-off at the speed cap is not confirmed), thicker first rod section, 0.8 mm wire.
+3. Appearance model departures from `model.py` for renders: tip housing coloured black (anodised), hoses, cable and water line drawn from the probe to the surface unit, concrete wall with a 51 mm core hole, slab and rubble piers, a 1.75 m mannequin. Dimensions come from `model.py`.
+
+### Safety concerns
+
+- Tip heat (PR-014) is near its limit at 45 C ambient; the camera's real power at the dimmed setting is unknown.
+- The drip margin is 12 per cent and depends on the capillary bore; the bottle must be at most 1 m above the tip, measured vertically.
+- The blocked-tip pressure rests on the blower's datasheet and the speed cap.
+- Water to a survivor stays under the medical lead's direction only; no change.
+
+### Kit bugs and notes
+
+- `.kit/render.py --check` needs `media/options.png`, which only exists after the coordinator renders `.kit/options.py` scenes; the scenes were exported to `/home/claude/renders/voidscope_options` and no placeholder was committed.
+- Hidden-line projection of the full assembly stalled with the default viewpoint, so the sheet script tilts the viewpoint 0.006 degrees off axis, as instructed.
+- Several kit-built solids (bending links, base link) were invalid by `is_valid` (sliver faces); `model.py` repairs them with `fix()`, which keeps volumes within 1 per cent.
+- A previous note on `.kit/concept.py` `cutaway_parts()` (centred cutter) still applies.
+
+### Not done here
+
+Photoreal renders, captions, `media/options.png`, `media/render-*.png` (the existing renders predate this model), `media/card.png` and `media/social-preview.png`: made on Amish's Mac. `media/render-hero.png` is the TRL 3 render of 2026-10-03.
+
+### Recommended next step
+
+Decide the concept choice, then render the product views and options picture on the Mac. TRL 4 stays on hold under the portfolio cap.

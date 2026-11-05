@@ -3,9 +3,9 @@ doc_id: VDS-PRC-001
 title: VoidScope design precis
 project: VoidScope
 doc_type: Precis
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-10-03'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,13 +25,17 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: "Steerable camera tip (Amish's decision 3A, VDS-DDR-003): summary, key choice 2, numbers from VDS-CAL-001 v0.2, patent note"
+- version: "0.5"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: "Kit 1.9.1 upgrade: concept options section (this design is option A, VDS-OPT-001), tip heat fix F1 (black anodised housing, dimmed LEDs); no change to the design"
 ---
 
 # VoidScope design precis
 
 Searches rubble voids with a camera probe that also delivers water and air to a trapped survivor.
 
-VoidScope is a 4.5 m push probe, 48 mm across at its widest, that passes a standard 51 mm core hole. A sealed 1080p camera with its own lights sits in a steerable tip that a thumb lever on the rod bends up to 90° to either side, so the camera looks around a bend from a straight hole; a small speaker on the head gives two-way talk. The rod is the air duct: a battery blower at the surface pushes filtered air down the bore and out of six holes at the head, at no more than 0.9 kPa even with every hole blocked. Inside the rod a guide tube carries a single-use water tube from a bottle at the surface to a bite valve on the nose, so a survivor can sip a slow gravity drip of at most 4.5 mL/min. The estimated parts cost is USD 1,780 against a value-engineering target of USD 2,000.
+VoidScope is a 4.5 m push probe, 48 mm across at its widest, that passes a standard 51 mm core hole. A sealed 1080p camera with its own lights sits in a steerable tip that a thumb lever on the rod bends up to 90° to either side, so the camera looks around a bend from a straight hole; a small speaker on the head gives two-way talk. The rod is the air duct: a battery blower at the surface pushes filtered air down the bore and out of six holes at the head, at no more than 0.9 kPa even with every hole blocked. Inside the rod a guide tube carries a single-use water tube from a bottle at the surface to a bite valve on the nose, so a survivor can sip a slow gravity drip of at most 4.4 mL/min. The estimated parts cost is USD 1,780 against a value-engineering target of USD 2,000.
 
 ![Figure 1. VoidScope concept: probe, surface unit and reservoir stand](../media/hero.png)
 
@@ -43,7 +47,7 @@ Two rescuers carry two cases. The long case holds the four rod sections side by 
 
 To search, the crew joins the sections (each snap button clicks into the next section), plugs the camera cable and the air hose into the surface unit and feeds the probe into a gap or a cored hole while watching the monitor. The camera is aimed by turning the rod; depth marks every 100 mm show how far in the tip is.
 
-When they find someone, they leave the probe in place. They talk through the speaker at the tip, which also works as the microphone. If the team's medical lead decides that the person is conscious and able to drink, the crew hangs the water bottle on its stand no more than 1 m above the tip and opens the roller clamp. The survivor pulls the bite valve out of its pocket on the nose and sips; the tube pays out from the surface. A 600 mm capillary in the line sets the highest possible flow, so even a bottle hung too high on a hot day cannot pass more than 4.5 mL/min. The blower is set to about 20 L/min on the flow meter to freshen the air in the void while the dig goes on around the probe.
+When they find someone, they leave the probe in place. They talk through the speaker at the tip, which also works as the microphone. If the team's medical lead decides that the person is conscious and able to drink, the crew hangs the water bottle on its stand no more than 1 m above the tip and opens the roller clamp. The survivor pulls the bite valve out of its pocket on the nose and sips; the tube pays out from the surface. A 750 mm capillary in the line sets the highest possible flow, so even a bottle hung too high on a hot day cannot pass more than 4.4 mL/min. The blower is set to about 20 L/min on the flow meter to freshen the air in the void while the dig goes on around the probe.
 
 *Figure 2. Air and water paths, with estimated flows.*
 
@@ -88,14 +92,18 @@ All choices below were decided on 2026-10-03 under Amish's pre-approval ("I pre-
 | Probe length; length that can go into a void | 4,538 mm; 4,131 mm |
 | Camera tip: bend each way; sideways reach bent 45° | 90°; 83 mm |
 | Probe mass; surface unit mass | 4.2 kg; 6.2 kg |
-| Tip droop with 2 m unsupported | 17 mm |
+| Tip droop with 2 m unsupported | 39 mm |
 | Buckling load of the whole rod | 940 N (4.7 times a 200 N push) |
 | Pixels across a 20 mm letter at 1 m | 19 (10 needed) |
-| Water ceiling: 1 m at 20 °C; 2 m at 40 °C | 1.5 mL/min; 4.5 mL/min |
+| Water ceiling: 1 m at 20 °C; 2 m at 40 °C | 1.2 mL/min; 4.4 mL/min |
 | Air: total loss at 20 L/min; flow at full speed | 0.38 kPa; 44 L/min |
 | Highest air pressure at a blocked tip | 0.9 kPa |
 | Run time, video and light, one pack at -10 °C | 4.3 h |
 | Estimated cost | USD 1,780 (USD 220 under the USD 2,000 target) |
+
+## Concept options
+
+This design is option A of three (VDS-OPT-001): a rigid sectioned rod with a steerable tip. Option B is a reel-fed glass-fibre push rod that follows a bent void; option C is a tripod and winch that lowers a sonde down a vertical hole. Option A scores 165 against 135 for B and 128 for C; the choice stays "Proposed, awaiting Amish" (VDS-DDR-005). The STEM check (VDS-STM-001) and its independent review found five failures in this design, fixed or restated without changing the working principle (VDS-DDR-006): the heat of the camera in its sealed tip (black anodised housing, dimmed LEDs), the drip margin (capillary 750 mm), the droop at 2 m, the blocked-tip pressure (regulated blower supply) and the touch criterion.
 
 ## Patent design-arounds
 
@@ -125,4 +133,4 @@ From the preliminary patent, trademark and prior-art screen (not legal advice):
 
 ## Next steps
 
-- TRL 4 (not started; capped): build the prototype to VDS-BLD-001, then test it against VDS-REQ-001 with the first co-design candidate's medical lead.
+- TRL 4 (not started; capped): build the prototype to VDS-BLD-001, then test it against VDS-PRS-001 with the first co-design candidate's medical lead.

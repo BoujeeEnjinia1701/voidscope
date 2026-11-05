@@ -19,11 +19,11 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / ".kit"), str(ROOT / "cad" / "src")]
 import build_views as bv  # noqa: E402
 from build_views import Part  # noqa: E402
-from model import PARAMS as P, build_components, derived  # noqa: E402
+from model import PARAMS as P, legacy_components as build_components, derived  # noqa: E402
 
 OUT = ROOT / "docs" / "05-build-plan"
 DWG = ROOT / "cad" / "drawings"
-DATE = "2026-10-03"
+DATE = "2026-10-24"
 D = derived(P)
 C = build_components(P)
 ZC = P["z_axis"]
@@ -417,7 +417,7 @@ def sheets(only=None):
 
 def _flat_bracket():
     """The monitor bracket as built with the lid closed (plate parallel to the floor), for the views."""
-    import model as m
+    import vds_geom as m
     L, W, hb, hl, t = P["case"]
     x0, y0 = P["case_at"]
     mw, mh, md = P["monitor"]
@@ -729,7 +729,7 @@ def wiring():
     wire([(54, 12), (56, 12), (56, 4), (72, 4), (72, 27), (79, 27)], AIR, 3); lab(57, 2.4, "air hose 12 mm, 2.5 m", AIR)
     wire([(94, 27), (98, 27)], AIR, 3); lab(94.3, 29.5, "rod bore", AIR)
     ax.text(97, 64, "Water line (no electrics):", fontsize=7.5, fontweight="bold", color=WAT, ha="center")
-    ax.text(97, 61, "bottle, at most 1 m above the tip  >  stopcock (priming)  >  strainer  >  600 mm capillary", fontsize=6.8, color=WAT, ha="center")
+    ax.text(97, 61, "bottle, at most 1 m above the tip  >  stopcock (priming)  >  strainer  >  750 mm capillary", fontsize=6.8, color=WAT, ha="center")
     ax.text(97, 59, ">  roller clamp  >  4 x 2.5 mm tube inside the guide  >  bite valve", fontsize=6.8, color=WAT, ha="center")
     wire([(94, 13.5), (98, 13.5)], WAT, 2.4)
     ax.text(4, 64, "Safety: battery lead and fuse out until the stop points in section 6 of the plan are passed.", fontsize=7.6, color="#B45309", fontweight="bold")

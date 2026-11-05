@@ -3,9 +3,9 @@ doc_id: VDS-BLD-001
 title: VoidScope prototype build plan
 project: VoidScope
 doc_type: Build plan
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-10-03'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,6 +21,10 @@ revisions:
     date: '2026-10-03'
     author: Amish Chadha
     change: "Drill card added with the rule to steer the tip aside to give water (Amish's round-2 decision 3A, VDS-DDR-004)"
+  - version: "0.4"
+    date: '2026-10-24'
+    author: Amish Chadha
+    change: "Kit 1.9.1 upgrade: tip housing finished black anodised and the camera LEDs dimmed by default (STEM fix F1, VDS-DDR-006, PR-014); pictures regenerated from the kit 1.9 model; no dimension changed"
 ---
 
 # VoidScope prototype build plan
@@ -333,6 +337,8 @@ The back lugs of each link sit inside the front lugs of the one behind, 0.2 mm a
 3. Wire anchors: on each side, 14 mm out from the centre, drill 1.2 mm in from the back face 4 mm deep, into a 3 mm cross hole drilled in from the outside. The crimped ferrule sits in the cross hole.
 4. Drill and tap two M3 holes 20 mm from the camera's back face, at 60° and 120° from the side toward the top, for the camera's grub screws.
 
+5. Finish: have the housing black anodised (or, failing that, painted matt black) before the camera goes in. A dull black skin sheds the camera's heat by radiation; bare bead-blasted metal would reach about 85 °C at 45 °C ambient with the camera and lights at full power (VDS-STM-001 S14, VDS-CAL-001 K2). Set the camera's LED dimmer low before use (PR-014).
+
 **How it fits the parts next to it.** The camera slides in from the front until its back meets the step; its face then sits 3 mm behind the front edge, protected. Two nylon-tipped grub screws hold it without marking it. The housing's back lugs fit inside link 4's front lugs.
 
 **Check before moving on.** The camera slides in by hand and its face sits 3 mm back. A wire with a crimped ferrule pulls tight against its anchor without slipping.
@@ -372,7 +378,7 @@ The body's two housing holes sit over section 4's two 4 mm holes. The lever turn
 - **Speaker:** 20 mm IP67 micro speaker, 8 Ω, 0.5 W, about 4 mm thick; a 20 mm disc of perforated stainless sheet as its cover.
 - **Cable:** hybrid camera cable, 7 m, with one mini-coax for video and four small cores, 6 mm across at most, with a six-pin aviation plug fitted at the surface end.
 - **Guide tube:** PTFE, 8 mm outside, 6 mm bore, 6.5 m.
-- **Water set (single use):** food-grade polyurethane tube 4 mm by 2.5 mm, 8 m; silicone bite valve about 11 mm across; 600 mm of 0.5 mm bore food-grade PTFE capillary with two barbed reducers; roller clamp; three-way stopcock; 100 micron strainer; 60 mL syringe. Keep it sealed in its bag until use.
+- **Water set (single use):** food-grade polyurethane tube 4 mm by 2.5 mm, 8 m; silicone bite valve about 11 mm across; 750 mm of 0.5 mm bore (VDS-DDR-006 F3) food-grade PTFE capillary with two barbed reducers; roller clamp; three-way stopcock; 100 micron strainer; 60 mL syringe. Keep it sealed in its bag until use.
 - **Grip:** rubber or foam handlebar grip tube, 38 mm bore, 300 mm.
 - **Battery packs (2):** 12.8 V 6 Ah LiFePO4 with built-in protection and an XT60 lead, about 151 x 65 x 94 mm, with a hook-and-loop strap.
 - **Blower:** 12 V centrifugal, about 97 x 94 x 33 mm, shut-off pressure 1.0 kPa or less, PWM speed input.
@@ -496,7 +502,7 @@ Stand the surface unit beside the hole with its lid toward the operator. Plug in
 
 ## 5. First checks
 
-These are the checks a TRL 4 test report would record; this plan only lists them. Requirement numbers are those of VDS-REQ-001.
+These are the checks a TRL 4 test report would record; this plan only lists them. Requirement numbers R1 to R12 are the old numbers of VDS-REQ-001, now PR-001 to PR-013 in VDS-PRS-001 (the Was column gives the mapping).
 
 *Table 2. First checks.*
 
@@ -527,6 +533,8 @@ A printed, laminated card kept in the lid of the surface unit. It is for drills 
 | --- | --- |
 | Before the tip goes in or out of a hole | Lever upright, lock knob tight, tip straight on the monitor (stop S9) |
 | To give water | Only when the medical lead directs it (stop S7). **Steer the tip aside** with the lever, fully to one side, so the bite valve on the nose is the foremost part and the person can reach it. The camera then sits about 109 mm to the side and 51 mm ahead of the nose. Open the roller clamp from closed; the person bites the valve to drink |
+| Hanging the bottle | At most 1 m above the tip, measured straight up from the tip to the bottle outlet, also when the probe points down into a void (the capillary is sized for 2 m, VDS-STM-001 S7) |
+| In hot air (above 35 °C) | Keep the camera LEDs at the lowest useful setting and keep the tip off the person; the housing reaches 54 °C at 45 °C (VDS-CAL-001 K3) |
 | After giving water | Close the roller clamp, straighten the tip on the monitor, lock the lever, then carry on |
 | Never | Force the lever past its stops; use the bent tip to move debris; give water to a person who cannot speak or drink |
 
@@ -564,4 +572,4 @@ Stop at each point. Carry on only when everything listed is true.
 - Calculations: `docs/04-calcs/01-sizing.md` (VDS-CAL-001 v0.2) and `docs/04-calcs/sizing.py`.
 - Bill of materials: `bom/bom.csv`.
 - Decisions: `docs/decisions/0003-steerable-camera-tip.md` (VDS-DDR-003) and `docs/decisions/0002-design-for-construction.md` (VDS-DDR-002), with VDS-DDR-001; register `docs/06-design-decisions.md`.
-- Requirements: `docs/03-requirements.md` (VDS-REQ-001 v0.4).
+- Requirements: `docs/03-requirements.md` (VDS-PRS-001 v1.0).

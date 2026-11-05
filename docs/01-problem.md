@@ -3,9 +3,9 @@ doc_id: VDS-PRB-001
 title: VoidScope problem statement
 project: VoidScope
 doc_type: Problem statement
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-10-03'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,6 +21,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: "TRL 3: budget worded as a value-engineering target; safety section added; no change to the problem"
+- version: "0.4"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: "Kit 1.9.1 upgrade: users and needs table and stakeholders table added (the source of VDS-URS-001); no change to the problem"
 ---
 
 # VoidScope problem statement
@@ -41,6 +45,29 @@ Commercial search cameras solve the seeing part well. The Leader Cam has a 47 mm
 | Volunteer and community emergency response teams | A simple kit that works after short training, with a clear written procedure | Earthquake-prone towns in low and middle income countries |
 | Medical lead on a rescue team | A controlled way to give small amounts of water and to ventilate a void while extrication continues | Confined-space medicine alongside the dig |
 | USAR trainers | An inexpensive probe for drills and for teaching void search | Training grounds and rubble piles |
+
+### Users and needs
+
+*Table 2. Users and needs.*
+
+| User type | Goals and needs | Typical use scenario | Pain points and challenges |
+| --- | --- | --- | --- |
+| Municipal fire and rescue crews | Find out whether anyone is alive in a void before committing to a dig; afford and repair the tool | First hours after a building collapse in a town with no USAR team nearby | Search cameras cost about USD 17,500; digging blind risks shifting the rubble onto a survivor |
+| Volunteer and community emergency response teams | A simple kit that works after short training, with a written procedure | Earthquake-prone town, volunteers arriving with hand tools, night work | Little training time; dust, mud and rain; no mains power |
+| Medical lead on a rescue team | Keep a found survivor alive and calm while extrication goes on; control any water given | A person found alive in a void who may be drowsy or badly placed | Aspiration risk from water; no safe way to supply air or water through the hole today |
+| USAR trainers | An inexpensive probe for drills and for teaching void search | Training grounds and rubble piles | Real search cameras are too costly to risk in drills |
+
+### Stakeholders
+
+*Table 3. Stakeholders.*
+
+| Stakeholder group | Role or interest | Engagement needed |
+| --- | --- | --- |
+| Co-design partner (for example a national fire service training school) | Tests the probe on training rubble and brings a medical lead into the water and air design | First meeting using the co-design checklist; neither named candidate has been contacted |
+| Medical leads and confined-space medicine specialists | Judge whether the water and air lines are acceptable | Review of the bite valve, the drip ceiling and the conscious-person-only rule before any drill with a person |
+| Builders (workshops, makerspaces, NGOs, universities) | Build and repair the kit from the open files | Clear build plan and bill of materials |
+| Regulators and standards bodies | Rules on rescue equipment, batteries, ingress protection and any device classification | Not engaged; classification is "to assess" with a qualified reviewer (VDS-REG-001) |
+| Survivors and their families | Receive the benefit; bear the risk if water or air is given wrongly | Represented by the medical lead; never test subjects at this stage |
 
 ## Operating environment
 

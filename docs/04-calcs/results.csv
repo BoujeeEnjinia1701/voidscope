@@ -13,8 +13,8 @@ B4,"Head mass (collar, nose, steerable tip with camera, speaker, bite valve)",0.
 B4t,"Steerable tip mass ahead of the nose (base link, links, pins, sheath, tip housing, camera)",0.28,kg
 B4s,"Steering housings and wires, and the steering control",0.41,kg
 B5,"Probe mass, assembled, lines filled",4.18,kg
-B6a,Tip droop with 1 m unsupported beyond the hole,1.69,mm
-B6b,Tip droop with 2 m unsupported beyond the hole,16.7,mm
+B6a,"Tip droop with 1 m unsupported beyond the hole (hole lip as a pivot, grip held, back span bending)",7.81,mm
+B6b,"Tip droop with 2 m unsupported beyond the hole (hole lip as a pivot, grip held, back span bending)",39.0,mm
 B71,Hand force at the grip with 1 m in the void and the tip unsupported (+ pushes down),-8.62,N
 B72,Hand force at the grip with 2 m in the void and the tip unsupported (+ pushes down),3.14,N
 B73,Hand force at the grip with 3 m in the void and the tip unsupported (+ pushes down),32.3,N
@@ -32,19 +32,20 @@ C2,Pixels across the height of a 20 mm letter at 1 m (1080p),19.2,px
 C3,Pixels needed to read a letter (assumed),10,
 C4,Illuminance on axis at 1 m from the camera LEDs (60 lm in a 120 degree beam),19.1,lx
 C5,Ratio to the camera's 0.01 lx minimum illumination,1910,
-C6,Light left after 2 m of dusty air at an assumed extinction of 0.5 per m,7.03,lx
-D1-0.5-5,"Drip ceiling at 0.5 m water height above the tip, 5 C, clamp fully open",0.48,mL/min
-D1-0.5-20,"Drip ceiling at 0.5 m water height above the tip, 20 C, clamp fully open",0.74,mL/min
-D1-0.5-40,"Drip ceiling at 0.5 m water height above the tip, 40 C, clamp fully open",1.13,mL/min
-D1-1-5,"Drip ceiling at 1 m water height above the tip, 5 C, clamp fully open",0.97,mL/min
-D1-1-20,"Drip ceiling at 1 m water height above the tip, 20 C, clamp fully open",1.47,mL/min
-D1-1-40,"Drip ceiling at 1 m water height above the tip, 40 C, clamp fully open",2.26,mL/min
-D1-2-5,"Drip ceiling at 2 m water height above the tip, 5 C, clamp fully open",1.94,mL/min
-D1-2-20,"Drip ceiling at 2 m water height above the tip, 20 C, clamp fully open",2.94,mL/min
-D1-2-40,"Drip ceiling at 2 m water height above the tip, 40 C, clamp fully open",4.51,mL/min
-D2,Highest possible flow: 2 m height (1 m allowed plus 1 m error) at 40 C,4.51,mL/min
-D3,"Same, at the 1 m height the procedure allows, 20 C",1.47,mL/min
-D4,"Water per hour at 1 m, 20 C, clamp fully open",88.2,mL/h
+C6,"Light left after 2 m of dusty air at an assumed extinction of 0.5 per m (visibility about 8 m, the design dust)",7.03,lx
+C7,"Same at an extinction of 4 per m (visibility about 1 m): below the camera minimum, as for any camera",0.00641,lx
+D1-0.5-5,"Drip ceiling at 0.5 m water height above the tip, 5 C, clamp fully open",0.39,mL/min
+D1-0.5-20,"Drip ceiling at 0.5 m water height above the tip, 20 C, clamp fully open",0.59,mL/min
+D1-0.5-40,"Drip ceiling at 0.5 m water height above the tip, 40 C, clamp fully open",0.91,mL/min
+D1-1-5,"Drip ceiling at 1 m water height above the tip, 5 C, clamp fully open",0.78,mL/min
+D1-1-20,"Drip ceiling at 1 m water height above the tip, 20 C, clamp fully open",1.18,mL/min
+D1-1-40,"Drip ceiling at 1 m water height above the tip, 40 C, clamp fully open",1.81,mL/min
+D1-2-5,"Drip ceiling at 2 m water height above the tip, 5 C, clamp fully open",1.56,mL/min
+D1-2-20,"Drip ceiling at 2 m water height above the tip, 20 C, clamp fully open",2.36,mL/min
+D1-2-40,"Drip ceiling at 2 m water height above the tip, 40 C, clamp fully open",3.63,mL/min
+D2,Highest possible flow: 2 m height (1 m allowed plus 1 m error) at 40 C with the capillary bore 5 per cent oversize,4.39,mL/min
+D3,"Same, at the 1 m height the procedure allows, 20 C",1.18,mL/min
+D4,"Water per hour at 1 m, 20 C, clamp fully open",70.9,mL/h
 D5,"Water in the line when primed (4 x 2.5 mm tube, 8 m)",39.3,mL
 D6,Flow at 1 m without the capillary (why it is fitted),70.4,mL/min
 D7,Water pressure at the bite valve at 2 m height (no flow),19.6,kPa
@@ -79,7 +80,7 @@ H3,"plug the camera cable, fit the air hose, hang the water bottle",0.60,min
 H4,"switch on, check the picture and voice",0.40,min
 H5,"steer the tip both ways, lock it straight",0.10,min
 H6,"Estimated time to start searching, two people",2.20,min
-I1,"Surface unit mass with one pack fitted (case 2.6 kg, pack 0.85 kg, monitor 0.6 kg, others estimated)",6.16,kg
+I1,"Surface unit mass with one pack fitted (case 2.6 kg, pack 0.85 kg, monitor 0.6 kg, others estimated)",6.15,kg
 I2,Estimated cost of the constructable design from bom/bom.csv,1780,USD
 I3,Value-engineering target (budget_usd),2000,USD
 I4,Under (+) or over (-) the target,220,USD
@@ -95,7 +96,7 @@ J7,Overlap between neighbouring links with the tip bent 90 deg (model check),0,m
 J8,"Sideways reach of the bent tip at 90 deg, from the probe centreline",109,mm
 J9-45,"Wire pulled in on the inside of a 45 deg bend, paid out on the outside","11.1 in, 10.9 out",mm
 J9-90,"Wire pulled in on the inside of a 90 deg bend, paid out on the outside","22.2 in, 21.6 out",mm
-J10,"Drum (and lever) turn for 90 deg at the tip, 18 mm drum",70.7,deg
+J10,"Drum (and lever) turn for 90 deg at the tip, drum 18 mm radius (36 mm across)",70.7,deg
 J11,Drum turn for 45 deg at the tip,35.2,deg
 J12,"Moment to bend the camera cable 90 deg in the bending section (EI 5,000 N mm2 assumed)",119,N mm
 J13,"Wire tension at the tip, and at the drum with housing friction (mu 0.15, 180 deg of bends)",8.5 and 13.6,N
@@ -104,3 +105,8 @@ J15,Wire tension with a 30 N thumb push against the stop,83.3,N
 J16,"Safety factor on a 0.6 mm 7x7 stainless wire rope (250 N breaking, assumed)",3.00,
 J17,Shear in the two 2 mm hinge pins of a joint at that tension,13.3,MPa
 J18,"Bearing on the printed lugs at that tension (two pins, 2.4 mm lugs); PA12 yield about 45 MPa",8.68,MPa
+K1,Tip housing surface area (33 x 71 mm cylinder with end),82.2,cm2
+K2,"First version: 3 W in the head, bead-blasted (emissivity 0.3), surface at 45 C ambient (55 C is the 10 s touch limit, the wrong criterion for a trapped survivor; 48 C for 10 min is the one used)",85.1,C
+K3,"Fix: black anodised (emissivity 0.85), LEDs dimmed so the head dissipates 0.8 W, surface at 45 C ambient",53.9,C
+K4,Same fix at 20 C ambient,30.0,C
+K5,"Same fix at 35 C ambient (limit 48 C for a 10 minute touch of bare metal, the survivor cannot pull away)",44.4,C

@@ -20,9 +20,10 @@ sys.path.insert(0, str(ROOT / ".kit"))
 sys.path.insert(0, str(ROOT / "cad/src"))
 import concept as K  # noqa: E402
 from concept import Part  # noqa: E402
-from model import PARAMS as P, build_components, build_parts, derived  # noqa: E402
+from model import PARAMS as P, legacy_components as build_components, derived  # noqa: E402
+from vds_geom import build_parts  # noqa: E402
 
-PROJECT, TITLE, DWG, DATE = "VoidScope", "Rubble void search probe with water and air lines: concept", "VDS-DWG-010", "2026-10-03"
+PROJECT, TITLE, DWG, DATE = "VoidScope", "Rubble void search probe with water and air lines: concept", "VDS-DWG-010", "2026-10-24"
 MD = ROOT / "media"
 
 
@@ -32,12 +33,20 @@ def parts(C=None):
 
 def with_operator(ps):
     """The 1.75 m scale figure stands where the operator stands, behind the tail cap."""
-    return ps + [K.human_figure(1750.0, x=-520.0, y=60.0, z=0.0)]
+    try:
+        sys.path.insert(0, str(ROOT / ".kit"))
+        from context_parts import mannequin
+        from build123d import Pos, Rot
+        man = Pos(-430, 330, 0) * Rot(0, 0, 90) * mannequin(1750.0, "stand")   # standing on the ground, facing the probe
+        return ps + [Part("Person 1.75 m (scale)", man, "#B9B4AC")]
+    except Exception as e:                                                     # keep the kit figure as a fallback
+        print("mannequin not used:", e)
+        return ps + [K.human_figure(1750.0, x=-520.0, y=60.0, z=0.0)]
 
 
 def hero():
     return K._render(with_operator(parts()), MD / "hero.png", title=PROJECT,
-                     note="Seen from the front right and above, 24 deg elevation. Grey figure: 1.75 m person for scale, standing where the operator stands")
+                     note="Seen from the front right and above, 24 deg elevation. Grey mannequin: 1.75 m person for scale, standing on the ground where the operator stands")
 
 
 def cutaway():
@@ -114,7 +123,7 @@ def flow():
         tmp / "air.png", f"{PROJECT}: air path at the 20 L/min setting (estimates, VDS-CAL-001)", "L/min",
         [(3, "Coupler leaks, 4 joints (est.)", 0.3)])
     b = K.flow_diagram(
-        [("1 L bottle, at most 1 m above the tip", "1 L"), ("Strainer and 600 mm capillary", f"{r['D3']} at 1 m, 20 C"),
+        [("1 L bottle, at most 1 m above the tip", "1 L"), ("Strainer and 750 mm capillary", f"{r['D3']} at 1 m, 20 C"),
          ("Roller clamp, 0 to open", "0 to ceiling"), ("Tube in the guide, 8 m", "39 mL primed"),
          ("Bite valve at the tip", "flows only when bitten")],
         tmp / "water.png", f"{PROJECT}: water path, gravity drip (estimates; never above {r['D2']} at 2 m and 40 C)", "")
@@ -135,10 +144,10 @@ def blueprint():
     shown = with_operator(ps)
     views = project_views(Compound([p.shape for p in ps]), MD / "_views")
     views["iso"] = project_views(Compound([p.shape for p in shown]), MD / "_views_fig")["iso"]
-    s = Sheet(project=PROJECT, title=TITLE, dwg_no=DWG, rev="P3", author="Amish Chadha", date=DATE, theme="blueprint",
-              material="Massing model for concept communication",
+    s = Sheet(project=PROJECT, title=TITLE, dwg_no=DWG, rev="P4", author="Amish Chadha", date=DATE, theme="blueprint",
+              material="Detailed model (kit 1.9), concept communication",
               revisions=[("P1", "Concept sheet", DATE, "AC"), ("P2", "Redrawn from the constructable design (VDS-DDR-002)", DATE, "AC"),
-                         ("P3", "Steerable camera tip (VDS-DDR-003)", DATE, "AC")])
+                         ("P3", "Steerable camera tip (VDS-DDR-003)", "2026-10-03", "AC"), ("P4", "Redrawn from the kit 1.9 detailed model", DATE, "AC")])
     s.add_ortho(views)
     s.add_svg(views["iso"], 276, 37, 140, 113, label="Isometric view", sublabel="Not to scale; figure is a 1.75 m person")
     s.add_notes("Key figures", [
@@ -148,7 +157,7 @@ def blueprint():
         "Four 1,050 mm aluminium sections, snap-button joints",
         "Camera 1080p, IP68, 12 LEDs; two-way voice at the tip",
         "Air through the rod bore: 20 L/min set, 0.9 kPa at most",
-        "Water by gravity drip and bite valve; 4.5 mL/min at most",
+        "Water by gravity drip and bite valve; 4.4 mL/min at most",
         "Battery 12.8 V 6 Ah LiFePO4, two packs; 4.3 h at -10 C",
         "Probe about 4.2 kg; surface unit about 6.2 kg (est.)"], x=276, y=168, width=140)
     s.save(MD / "concept-blueprint")

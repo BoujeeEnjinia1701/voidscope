@@ -1,11 +1,13 @@
-"""VoidScope general arrangement sheet VDS-DWG-001, Rev P3 (TRL 3; constructable design VDS-DDR-002 with the
-steerable camera tip of VDS-DDR-003).
+"""VoidScope general arrangement sheet VDS-DWG-001, Rev P4 (TRL 3; constructable design VDS-DDR-002 with the
+steerable camera tip of VDS-DDR-003), drawn from components(CHOSEN) of the kit 1.9 model (every bolt, nut, washer,
+pin and screw, materials, edge breaks) in cad/src/model.py, not from the earlier component dictionary.
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/VDS-DWG-001.svg, .pdf and .png from the parametric model in cad/src/model.py
 with .kit/drawing.py. Dimensions are taken from PARAMS and derived(), so they follow any parameter
 change. The concept blueprint in media/ is VDS-DWG-010; the making sketches are VDS-DWG-101 onward.
 """
+import math
 import shutil
 import sys
 from pathlib import Path
@@ -13,9 +15,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / ".kit"), str(ROOT / "cad" / "src")]
 from drawing import Sheet, _viewbox, _t, M, TB_Y, INK, MUTED  # noqa: E402
-from model import PARAMS as P, assembly, build_components, derived, HEAD_KEYS  # noqa: E402
+from model import PARAMS as P, components, CHOSEN, derived, HEAD_KEYS  # noqa: E402
 
-DATE = "2026-10-03"
+DATE = "2026-10-24"
+OLD = "2026-10-03"
 
 
 def safe_project_views(part, workdir, line_weight=0.35, names=("front", "top", "right", "iso")):
@@ -26,8 +29,9 @@ def safe_project_views(part, workdir, line_weight=0.35, names=("front", "top", "
     bb = part.bounding_box()
     c = bb.center()
     d = max(bb.size.X, bb.size.Y, bb.size.Z) * 10
-    setups = {"front": ((c.X, c.Y - d, c.Z), (0, 0, 1)), "top": ((c.X, c.Y, c.Z + d), (0, 1, 0)),
-              "right": ((c.X + d, c.Y, c.Z), (0, 0, 1)), "iso": ((c.X + d, c.Y - d, c.Z + d * 0.8), (0, 0, 1))}
+    e = d * math.radians(0.006)     # viewpoint tilted 0.006 degrees off-axis: exactly axis-aligned hidden-line projection stalls on the many coaxial cylinders
+    setups = {"front": ((c.X + e, c.Y - d, c.Z + e), (0, 0, 1)), "top": ((c.X + e, c.Y + e, c.Z + d), (0, 1, 0)),
+              "right": ((c.X + d, c.Y + e, c.Z + e), (0, 0, 1)), "iso": ((c.X + d, c.Y - d, c.Z + d * 0.8), (0, 0, 1))}
     out = {}
     for name in names:
         origin, up = setups[name]
@@ -74,17 +78,19 @@ def leader(x1, y1, x2, y2, text, anchor="start"):
 
 def main():
     D = derived(P)
-    C = build_components(P)
+    from build123d import Compound
+    chosen = [q for q in components(CHOSEN) if q["kind"] != "context"]
     work = ROOT / "cad" / "drawings" / "_views"
-    asm = assembly(C=C)
+    asm = Compound([q["shape"] for q in chosen])
     views = safe_project_views(asm, work)
     bb = asm.bounding_box()
     s = Sheet(project="VoidScope", title="Rubble void search probe and surface unit: general arrangement",
-              dwg_no="VDS-DWG-001", rev="P3", author="Amish Chadha", date=DATE, scale=1 / 25, theme="technical",
+              dwg_no="VDS-DWG-001", rev="P4", author="Amish Chadha", date=DATE, scale=1 / 25, theme="technical",
               material="6061-T6 aluminium tube and bar; bought parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
-                         ("P2", "VDS-DDR-002: design for construction", DATE, "AC"),
-                         ("P3", "VDS-DDR-003: steerable camera tip and steering control", DATE, "AC")])
+              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", OLD, "AC"),
+                         ("P2", "VDS-DDR-002: design for construction", OLD, "AC"),
+                         ("P3", "VDS-DDR-003: steerable camera tip and steering control", OLD, "AC"),
+                         ("P4", "Kit 1.9.1: Redrawn from the kit 1.9 detailed model", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -115,8 +121,8 @@ def main():
     s._layers += L
     s.add_svg(views["iso"], 276, 37, 140, 50, label="Isometric view", sublabel="Not to scale")
     # Detail A: the head at 1:2
-    from build123d import Compound
-    hv = safe_project_views(Compound([C[k_].shape for k_ in HEAD_KEYS]), work / "head", names=("top",))
+    head = [q["shape"] for q in chosen if q["note"] in HEAD_KEYS or q["note"] == "bite"]
+    hv = safe_project_views(Compound(head), work / "head", names=("top",))
     s.add_svg(hv["top"], 276, 102, 140, 30, scale=0.4, label="Detail A: head and steerable tip",
               sublabel="Scale 1:2.5; plan from above, tip to the right, straight; bends 90 deg each way in this plane")
     s.add_notes("Main dimensions and interfaces (mm)", [

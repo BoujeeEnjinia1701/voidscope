@@ -3,9 +3,9 @@ doc_id: VDS-DEC-001
 title: VoidScope design decisions register
 project: VoidScope
 doc_type: Design decisions register
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-10-03'
+date: '2026-10-24'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,6 +21,10 @@ revisions:
   date: '2026-10-03'
   author: Amish Chadha
   change: "Open decision 1 (bite valve access) decided, round 2, 3A (VDS-DDR-004); one item added to confirm when parts are bought; no open decisions"
+- version: "0.4"
+  date: '2026-10-24'
+  author: Amish Chadha
+  change: "Kit 1.9.1 upgrade: open decision 2 (concept choice, proposed, awaiting Amish, VDS-DDR-005); STEM fixes F1 and F2 recorded as decided under the standing instruction (VDS-DDR-006); items 15 and 16 to confirm"
 ---
 
 # VoidScope design decisions register
@@ -31,7 +35,11 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-None. Open decision 1 (bite valve access) was decided by Amish on 2026-10-03: the valve stays on the nose and the tip is steered aside to give water; see Decisions made and VDS-DDR-004.
+*Open decision 1 (bite valve access) was decided by Amish on 2026-10-03: the valve stays on the nose and the tip is steered aside to give water; see Decisions made and VDS-DDR-004.*
+
+| # | Decision needed | Options | Recommendation | Affects in the build | Source |
+| --- | --- | --- | --- | --- | --- |
+| 2 | Concept choice. Proposed, awaiting Amish | A: rigid sectioned rod with steerable tip (design of record); B: reel-fed glass-fibre push rod; C: tripod and winch sonde | A (165 of 205 against 135 and 128; 22 per cent clear of B) | Nothing if A is kept; PRC, PRS, CAL, build plan and BOM redone for B or C | VDS-OPT-001; VDS-DDR-005 |
 
 ## To confirm when parts are bought
 
@@ -42,7 +50,7 @@ None. Open decision 1 (bite valve access) was decided by Amish on 2026-10-03: th
 | 3 | The flow meter's pressure drop is 0.2 kPa or less at 20 L/min and it fits 100 mm tall | A larger drop lowers the full-speed flow; the lid must close | VDS-CAL-001 E; VDS-DDR-002 P11 |
 | 4 | The snap button suits 1.47 mm and 2.11 mm walls, its button stands about 1.5 mm proud, and it holds a 300 N pull | It locks every joint | VDS-DDR-002 P2; VDS-CAL-001 B |
 | 5 | The two tube sizes telescope with about 0.11 mm a side as bought | The couplers must slide in by hand | VDS-DDR-002 P1 |
-| 6 | The capillary bore is 0.5 mm and the measured flow at 1 m and 20 °C is about 1.5 mL/min | It sets the drip ceiling (R5) | VDS-DDR-001 S1; VDS-CAL-001 D |
+| 6 | The capillary bore is 0.5 mm, 750 mm long (was 600 mm), and the measured flow at 1 m and 20 °C is about 1.2 mL/min | It sets the drip ceiling (R5) | VDS-DDR-001 S1; VDS-CAL-001 D |
 | 7 | The bite valve is about 11 mm across, fits the 4 mm tube and stays shut under 20 kPa of water head | It is the water safety stop | VDS-DDR-001 S2; VDS-CAL-001 D7 |
 | 8 | The speaker is 20 mm across and 4 mm thick, IP67 | It must sit flush in its pocket | VDS-DDR-002 P8 |
 | 9 | The hybrid cable is 6 mm or less across, and the case, monitor (28 mm deep) and battery (151 x 65 x 94 mm) match the sizes modelled | They set the grommets, the plate layout and the lid stack | VDS-DDR-002 P10, P11 |
@@ -51,6 +59,8 @@ None. Open decision 1 (bite valve access) was decided by Amish on 2026-10-03: th
 | 12 | The camera cable's bending stiffness is near 5,000 N·mm² | It sets the thumb force to hold 90° (about 5 N) | VDS-CAL-001 J12 to J14 |
 | 13 | The printed links' 2.0 mm pin holes ream cleanly and the lugs hold the pins without rocking | The joints must swing freely but not wobble the camera | VDS-DDR-003 T3 |
 | 14 | Confirm in drills with the medical lead that a survivor can reach the bite valve on the nose past the tip steered fully aside | The valve stays on the nose (decision 3A, round 2); if it is hard to reach, a 60 mm flexible valve extension is the fallback | VDS-DDR-004 |
+| 15 | The camera's electrical power at the dimmed LED setting is about 0.8 W or less, and the black anodising of the tip housing is available and quoted (it is not priced in the BOM) | It sets the tip surface at 44 C at 35 C ambient (PR-014) | VDS-DDR-006 F1; VDS-CAL-001 K3 |
+| 16 | The suppliers' data for the camera (power, dimmer), blower (shut-off pressure) and bite valve (cracking pressure) are in hand before any build | They are the three figures the safety stops rest on | VDS-STM-001 S11, S14, S18 |
 
 ## Value engineering
 
@@ -72,3 +82,7 @@ Value-engineering target: USD 2,000 (a hypothetical control target, not a limit)
 | 2026-10-03 | Appearance model departures from `model.py` (rounded edges, depth bands, labels, cables drawn to the surface unit, rubble context) accepted for renders only | Amish, same pre-approval | `docs/REVIEW.md`, TRL 3 |
 | 2026-10-03 | Decision 3A: add a cable-steered articulating camera tip that bends up to 90° each way, controlled from the handle; restate R11 as "see around a 45-degree bend from a straight hole" with a verification method; keep the rigid rod, the air path and the water tube to the bite valve; the tip must still pass the 51 mm hole | Amish: "1A 2A 3A 4A 5A 6A 7A 8A 9A 10A 11A" | VDS-DDR-003; VDS-REQ-001 v0.4 |
 | 2026-10-03 | 3A (round 2): bite valve kept on the nose; the drill card says steer the tip aside to give water; "confirm in drills with the medical lead" added under To confirm; articulating camera tips added to the patent screen list. No design change | Amish: "i agree with all the 46 recommendations you provided. please proceed." | VDS-DDR-004 |
+| 2026-10-24 | STEM fix F1: tip housing black anodised and LEDs dimmed by default (heat in the tip, 85 C to 54 C at 45 C ambient); no change of working principle | Standing instruction of 2026-10-23, applied by Claude | VDS-DDR-006 |
+| 2026-10-24 | STEM fixes F3 (capillary 750 mm), F4 (tip touch criterion 48 C for 10 min, 35 C ambient) and F5 (blower from the regulated converter with a speed cap) after the independent review | Standing instruction of 2026-10-23, applied by Claude | VDS-DDR-006 |
+| 2026-10-24 | STEM fix F2: option B reach restated as floor-supported only, free reach capped at 1 m | Standing instruction of 2026-10-23, applied by Claude | VDS-DDR-006 |
+| 2026-10-24 | Concept choice: option A recommended, Proposed, awaiting Amish (not decided) | Proposed, awaiting Amish | VDS-DDR-005 |

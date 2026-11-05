@@ -1,6 +1,6 @@
 # VoidScope
 
-![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/voidscope/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/voidscope/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/voidscope/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/voidscope) [![DOI](https://zenodo.org/badge/{"message":"GitHub access to this repository is not enabled for this session. Use add_repo to request access. If add_repo answers that read access is already available and you need GitHub API or write access, call add_repo again with access:\"push\" to attach the repository with credentials.","documentation_url":"https://docs.anthropic.com/en/docs/claude-code/github-actions"}.svg)](https://zenodo.org/badge/latestdoi/{"message":"GitHub access to this repository is not enabled for this session. Use add_repo to request access. If add_repo answers that read access is already available and you need GitHub API or write access, call add_repo again with access:\"push\" to attach the repository with credentials.","documentation_url":"https://docs.anthropic.com/en/docs/claude-code/github-actions"})
+![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Stage P3](https://img.shields.io/badge/stage-P3%20design%20outputs-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827) [![REUSE compliant](https://github.com/BoujeeEnjinia1701/voidscope/actions/workflows/reuse.yml/badge.svg)](https://github.com/BoujeeEnjinia1701/voidscope/actions/workflows/reuse.yml) [![Archived in Software Heritage](https://archive.softwareheritage.org/badge/origin/https://github.com/BoujeeEnjinia1701/voidscope/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/BoujeeEnjinia1701/voidscope) [![DOI](https://zenodo.org/badge/{"message":"GitHub access to this repository is not enabled for this session. Use add_repo to request access. If add_repo answers that read access is already available and you need GitHub API or write access, call add_repo again with access:\"push\" to attach the repository with credentials.","documentation_url":"https://docs.anthropic.com/en/docs/claude-code/github-actions"}.svg)](https://zenodo.org/badge/latestdoi/{"message":"GitHub access to this repository is not enabled for this session. Use add_repo to request access. If add_repo answers that read access is already available and you need GitHub API or write access, call add_repo again with access:\"push\" to attach the repository with credentials.","documentation_url":"https://docs.anthropic.com/en/docs/claude-code/github-actions"})
 
 **Area:** Situational field hardware · **TRL:** 3 of 9 (proof of concept on paper) · **Value-engineering target:** about $2,000 USD (estimated cost $1,780 USD) · **Difficulty:** 3 of 5
 
@@ -8,7 +8,7 @@ Searches rubble voids with a camera probe that also delivers water and air to a 
 
 ![VoidScope: rubble void search probe with water and air lines, product render](media/render-hero.png)
 
-[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/VDS-DWG-001.pdf) · [Calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement (PDF)](cad/drawings/VDS-DWG-001.pdf) · [STEM check](docs/01b-stem-check.md) · [Concept options](docs/02a-concept-options.md) · [Calculations](docs/04-calcs/01-sizing.md) · [Prototype build plan](docs/05-build-plan.md) · [Design decisions](docs/06-design-decisions.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
@@ -55,9 +55,19 @@ Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 ## Concept
 
-A 4.5 m push probe, 48 mm across at its widest, that passes a standard 51 mm core hole; its camera tip bends up to 90° either way from a thumb lever to look around a bend. Four aluminium sections click together with snap buttons and stay threaded on the camera cable and a water guide tube, like the cord in a tent pole. A sealed 1080p camera with its own lights sits in the steerable tip; a small speaker for two-way talk and a bite valve sit in the turned aluminium head. A battery blower in the surface unit pushes filtered air down the rod's bore and out of six holes at the head, never above 0.9 kPa even when the tip is blocked; a gravity drip from a bottle on a stand reaches the bite valve through a capillary that caps the flow at 4.5 mL/min. The monitor and recorder sit in the lid of the surface unit.
+A 4.5 m push probe, 48 mm across at its widest, that passes a standard 51 mm core hole; its camera tip bends up to 90° either way from a thumb lever to look around a bend. Four aluminium sections click together with snap buttons and stay threaded on the camera cable and a water guide tube, like the cord in a tent pole. A sealed 1080p camera with its own lights sits in the steerable tip; a small speaker for two-way talk and a bite valve sit in the turned aluminium head. A battery blower in the surface unit pushes filtered air down the rod's bore and out of six holes at the head, never above 0.9 kPa even when the tip is blocked; a gravity drip from a bottle on a stand reaches the bite valve through a capillary that caps the flow at 4.4 mL/min. The monitor and recorder sit in the lid of the surface unit.
 
-Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [docs/03-requirements.md](docs/03-requirements.md)
+Full design precis: [docs/02-concept.md](docs/02-concept.md) · User requirements: [docs/03a-user-requirements.md](docs/03a-user-requirements.md) · Product requirements: [docs/03-requirements.md](docs/03-requirements.md) · Traceability: [docs/03b-traceability.md](docs/03b-traceability.md)
+
+## STEM check
+
+Twenty-six claims are checked (VDS-STM-001): twelve are within known science and fourteen are plausible, bounded by the calculations or left to supplier data and TRL 4 tests. Five failed along the way and were fixed or restated under Amish's standing instruction: the camera in its sealed tip would reach 85 C at 45 C ambient (now a black anodised housing and dimmed LEDs, 44 C at 35 C), the drip had no margin for an oversize capillary bore (capillary now 750 mm), the droop at 2 m was understated, the blocked-tip air pressure needs a regulated blower supply, and a 10 mm glass-fibre rod in option B cannot hold a head in free air. An independent reviewer's findings are recorded in the document.
+
+## Concept options
+
+![Three ways to search a rubble void, side by side at one scale](media/options.png)
+
+Option A, the rigid sectioned rod with a steerable tip (score 165 of 205), is the design of record and is proposed, awaiting Amish; option B, a reel-fed glass-fibre push rod (135), and option C, a tripod and winch sonde for vertical holes (128), are kept in the model at the same level of detail (VDS-OPT-001). The options picture is rendered from `cad/src/model.py` by the coordinator and is added to `media/` after that render.
 
 ## Key components
 
@@ -93,17 +103,17 @@ The design is constructable: every part can be cut, drilled, turned or bought, a
 
 ## Repository layout
 
-| Folder | Contents |
-| --- | --- |
-| `docs/` | Problem, concept, requirements, calculations and design decisions |
-| `cad/src/` | build123d Python source, the source of truth for all geometry |
-| `cad/step/`, `cad/stl/` | Exported models for FreeCAD, other CAD tools and printing |
-| `cad/drawings/` | 2D sketches and dimensioned drawings |
-| `bom/` | Bill of materials |
-| `electronics/` | KiCad schematics and PCB layouts |
-| `firmware/` | Microcontroller code |
-| `media/` | Renders, perspectives and photos |
-| `build-log/` | Dated prototyping notes |
+```
+docs/                 controlled documents (PRB, STM, OPT, PRC, URS, PRS, RTM, CAL, BLD, DEC, REG, FEA, RSK, MKT, PLN, DDR) and REVIEW.md
+docs/04-calcs/        sizing.py (VDS-CAL-001) and stem_check.py (VDS-STM-001)
+cad/src/model.py      parametric model of options A, B and C (kit 1.9, detail level D3)
+cad/src/              sheets.py, build_plan_media.py, concept_media.py, product_model.py, vds_geom.py, vds_options.py
+cad/step/, cad/stl/   STEP per part (option A) and per assembly (A, B, C); STL of the chosen design
+cad/drawings/         VDS-DWG-001 general arrangement and VDS-DWG-101 to 114 making sketches
+bom/bom.csv           priced bill of materials
+media/                concept media and renders
+.kit/                 shared documentation kit 1.9 (do not edit here)
+```
 
 ## Documentation
 

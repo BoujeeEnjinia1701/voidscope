@@ -16,7 +16,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "cad/src"))
-from model import PARAMS as P, derived, build_components, bent_tip  # noqa: E402
+from model import PARAMS as P, derived, legacy_components as build_components, bent_tip  # noqa: E402
 
 G = 9.81
 OUT = []
@@ -87,7 +87,12 @@ wN = w * G / 1000      # N/mm
 Wh = m_head * G
 for a in (1000.0, 2000.0):
     d = wN * a ** 4 / (8 * E * I) + Wh * a ** 3 / (3 * E * I)
-    out(f"B6{'a' if a == 1000 else 'b'}", f"Tip droop with {a / 1000:.0f} m unsupported beyond the hole", d, "mm")
+    # the hole lip is a pivot, not a clamp: the span behind it (lip to grip) also bends and turns the whole front (independent review)
+    xg_ = P["grip"][2] + P["grip"][1] / 2
+    Lb = D["length"] - a - xg_
+    M_lip = wN * a ** 2 / 2 + Wh * a
+    d += M_lip * Lb / (3 * E * I) * a
+    out(f"B6{'a' if a == 1000 else 'b'}", f"Tip droop with {a / 1000:.0f} m unsupported beyond the hole (hole lip as a pivot, grip held, back span bending)", d, "mm")
 # hand force with the hole lip as fulcrum, grip centre as the hand
 xg = P["grip"][2] + P["grip"][1] / 2
 Ltot = D["length"]
@@ -129,25 +134,26 @@ omega = 2 * math.pi * (1 - math.cos(math.radians(beam / 2)))
 lux = lum / omega
 out("C4", "Illuminance on axis at 1 m from the camera LEDs (60 lm in a 120 degree beam)", lux, "lx")
 out("C5", "Ratio to the camera's 0.01 lx minimum illumination", lux / 0.01)
-out("C6", "Light left after 2 m of dusty air at an assumed extinction of 0.5 per m", lux * math.exp(-0.5 * 2), "lx")
+out("C6", "Light left after 2 m of dusty air at an assumed extinction of 0.5 per m (visibility about 8 m, the design dust)", lux * math.exp(-0.5 * 2), "lx")
+out("C7", "Same at an extinction of 4 per m (visibility about 1 m): below the camera minimum, as for any camera", lux * math.exp(-4 * 2), "lx")
 
 # ------------------------------------------------------------------ D. water (R5, R10)
 MU = {5: 1.519e-3, 20: 1.002e-3, 40: 0.653e-3}       # Pa s
-d_cap, L_cap = 0.5e-3, 0.600
+d_cap, L_cap = 0.5e-3, 0.750        # capillary 750 mm (was 600 mm; VDS-DDR-006 F3, independent review)
 d_t, L_t = 2.5e-3, 8.0
 RHOW = 1000.0
 
 
-def q_ml_min(h, T):
-    R = 128 * MU[T] / math.pi * (L_cap / d_cap ** 4 + L_t / d_t ** 4)
+def q_ml_min(h, T, bore=1.0):
+    R = 128 * MU[T] / math.pi * (L_cap / (d_cap * bore) ** 4 + L_t / d_t ** 4)
     return RHOW * G * h / R * 6e7
 
 
 for h in (0.5, 1.0, 2.0):
     for T in (5, 20, 40):
         out(f"D1-{h:g}-{T}", f"Drip ceiling at {h:g} m water height above the tip, {T} C, clamp fully open", q_ml_min(h, T), "mL/min")
-qmax = q_ml_min(2.0, 40)
-out("D2", "Highest possible flow: 2 m height (1 m allowed plus 1 m error) at 40 C", qmax, "mL/min")
+qmax = q_ml_min(2.0, 40, 1.05)
+out("D2", "Highest possible flow: 2 m height (1 m allowed plus 1 m error) at 40 C with the capillary bore 5 per cent oversize", qmax, "mL/min")
 out("D3", "Same, at the 1 m height the procedure allows, 20 C", q_ml_min(1.0, 20), "mL/min")
 out("D4", "Water per hour at 1 m, 20 C, clamp fully open", q_ml_min(1.0, 20) * 60, "mL/h")
 vprime = math.pi / 4 * (d_t * 1000) ** 2 * L_t * 1000 / 1000
@@ -330,7 +336,7 @@ for ang in (45.0, 90.0):
     out(f"J9-{ang:.0f}", f"Wire pulled in on the inside of a {ang:.0f} deg bend, paid out on the outside", f"{pin:.1f} in, {pout:.1f} out", "mm")
 R_drum = P["drum"][0]
 pin90 = wire_change(90.0)[0]
-out("J10", "Drum (and lever) turn for 90 deg at the tip, 18 mm drum", math.degrees(pin90 / R_drum), "deg")
+out("J10", "Drum (and lever) turn for 90 deg at the tip, drum 18 mm radius (36 mm across)", math.degrees(pin90 / R_drum), "deg")
 out("J11", "Drum turn for 45 deg at the tip", math.degrees(wire_change(45.0)[0] / R_drum), "deg")
 EI_cable = 5000.0       # N mm2, 6 mm polyurethane hybrid cable (assumed)
 M_bend = EI_cable * math.radians(90.0) / D["bend_len"]
@@ -348,6 +354,31 @@ out("J16", "Safety factor on a 0.6 mm 7x7 stainless wire rope (250 N breaking, a
 out("J17", "Shear in the two 2 mm hinge pins of a joint at that tension", T_max / (2 * math.pi / 4 * P["tpin"] ** 2), "MPa")
 lug_t = lod / 2 - P["lug"][1] - P["lug"][2]
 out("J18", "Bearing on the printed lugs at that tension (two pins, 2.4 mm lugs); PA12 yield about 45 MPa", T_max / (2 * P["tpin"] * lug_t), "MPa")
+
+# ------------------------------------------------------------------ K. Heat in the tip (STEM check S14, VDS-DEC-001 D15)
+D_T, L_T = 0.033, 0.071           # tip housing, turned from 35 mm bar: 33 mm x 71 mm in the model
+A_T = math.pi * D_T * L_T + math.pi * D_T ** 2 / 4
+
+
+def tip_temp(q_w, t_amb_c, eps):
+    """Housing surface temperature: Churchill-Chu natural convection on a horizontal cylinder plus radiation."""
+    k, nu, al, pr = 0.0285, 1.85e-5, 2.6e-5, 0.71
+    ta = t_amb_c + 273.15
+    for i in range(1, 3000):
+        dt = i * 0.1
+        ts = ta + dt
+        ra = G * (1 / (ta + dt / 2)) * dt * D_T ** 3 / (nu * al)
+        nu_ = (0.6 + 0.387 * ra ** (1 / 6) / (1 + (0.559 / pr) ** (9 / 16)) ** (8 / 27)) ** 2
+        if (nu_ * k / D_T + eps * 5.670374e-8 * (ts ** 4 - ta ** 4) / dt) * A_T * dt >= q_w:
+            return t_amb_c + dt
+    return float("nan")
+
+
+out("K1", "Tip housing surface area (33 x 71 mm cylinder with end)", A_T * 1e4, "cm2")
+out("K2", "First version: 3 W in the head, bead-blasted (emissivity 0.3), surface at 45 C ambient (55 C is the 10 s touch limit, the wrong criterion for a trapped survivor; 48 C for 10 min is the one used)", tip_temp(3.0, 45.0, 0.3), "C")
+out("K3", "Fix: black anodised (emissivity 0.85), LEDs dimmed so the head dissipates 0.8 W, surface at 45 C ambient", tip_temp(0.8, 45.0, 0.85), "C")
+out("K4", "Same fix at 20 C ambient", tip_temp(0.8, 20.0, 0.85), "C")
+out("K5", "Same fix at 35 C ambient (limit 48 C for a 10 minute touch of bare metal, the survivor cannot pull away)", tip_temp(0.8, 35.0, 0.85), "C")
 
 with (ROOT / "docs/04-calcs/results.csv").open("w", newline="") as f:
     wtr = csv.writer(f)

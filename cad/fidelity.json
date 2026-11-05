@@ -1,0 +1,47 @@
+{
+ "level": "D3",
+ "stage": "P3",
+ "hash": "edfc9a011c18869d",
+ "options": {
+  "A": {
+   "title": "Rigid sectioned rod with steerable tip",
+   "parts": 143,
+   "made_or_bought": 63,
+   "fasteners": 80,
+   "welds": 0,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 11.8,
+   "step_files": 63
+  },
+  "B": {
+   "title": "Reel-fed flexible push cable",
+   "parts": 125,
+   "made_or_bought": 43,
+   "fasteners": 80,
+   "welds": 2,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 26.6,
+   "step_files": 0
+  },
+  "C": {
+   "title": "Tripod and winch lowered sonde",
+   "parts": 143,
+   "made_or_bought": 57,
+   "fasteners": 70,
+   "welds": 16,
+   "bare": [],
+   "bare_share": 0.0,
+   "interference": [],
+   "mass_kg": 15.5,
+   "step_files": 0
+  }
+ },
+ "failures": [],
+ "warnings": [],
+ "passed": true,
+ "seconds": 70.6
+}

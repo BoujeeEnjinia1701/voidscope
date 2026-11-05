@@ -5,6 +5,11 @@ repo: BoujeeEnjinia1701/voidscope         # GitHub repository, shown on every dr
 area: Situational field hardware
 trl: 3                   # Technology Readiness Level, see .kit/STANDARDS.md section 9
 trl_target: 3
+stage: P3
+cad_level: D3
+stem_check: open         # VDS-STM-001 v0.1: 12 within, 14 plausible (supplier data and TRL 4 tests), none failing; five fixes F1 to F5 under the standing instruction (VDS-DDR-006)
+concept_options: [A, B, C]   # VDS-OPT-001: A rigid rod with steerable tip, B reel-fed push rod, C tripod and winch sonde
+concept_chosen: A (proposed)   # Proposed, awaiting Amish (VDS-DDR-005, VDS-DEC-001 open decision 2)
 design_state: constructable   # STANDARDS section 18; made constructable 2026-10-03 (VDS-DDR-002)
 trl_evidence:
   - docs/01-problem.md
@@ -17,7 +22,6 @@ trl_evidence:
   - docs/04-calcs/01-sizing.md
   - docs/04-calcs/sizing.py
   - cad/src/model.py
-  - cad/step/voidscope-assembly.step
   - cad/drawings/VDS-DWG-001.svg
   - cad/drawings/VDS-DWG-001.pdf
   - bom/bom.csv
@@ -25,12 +29,35 @@ trl_evidence:
   - docs/06-design-decisions.md
   - docs/05-build-plan/overview.png
   - cad/src/build_plan_media.py
+  - docs/01b-stem-check.md
+  - docs/02a-concept-options.md
+  - docs/03a-user-requirements.md
+  - docs/03b-traceability.md
+  - docs/07-regulatory.md
+  - docs/08-feasibility.md
+  - docs/09-risk.md
+  - docs/10-market.md
+  - docs/11-plan.md
+  - docs/04-calcs/stem_check.py
+  - docs/04-calcs/stem_results.csv
+  - docs/04-calcs/results.csv
+  - docs/decisions/0005-concept-selection.md
+  - docs/decisions/0006-stem-check-fixes.md
+  - cad/fidelity.json
+  - cad/src/vds_geom.py
+  - cad/src/vds_options.py
+  - cad/src/sheets.py
+  - cad/src/concept_media.py
+  - cad/src/product_model.py
+  - cad/step/A-assembly.step
+  - cad/step/B-assembly.step
+  - cad/step/C-assembly.step
 shortlisted: false
 pitch: >-
   Searches rubble voids with a camera probe that also delivers water and air to a trapped survivor.
 problem: >-
   After a building collapse, local crews reach most survivors first but rarely have search cameras, and those who find someone alive still need to keep them supplied while the dig goes on. Commercial search cameras cost more than many local teams can pay and do not deliver water or air.
-budget_usd: 2000  # value-engineering target (STANDARDS section 18); estimated cost USD 1,780 (VDS-CAL-001 v0.2)
+budget_usd: 2000  # value-engineering target (STANDARDS section 18); estimated cost USD 1,780 (VDS-CAL-001 v0.3)
 difficulty: 3  # 1 easiest, 5 hardest
 hero_image: media/hero.png
 licenses:
